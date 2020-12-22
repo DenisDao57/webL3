@@ -7,7 +7,8 @@ session_start();
 
 include '../bdd.php';
 
-foreach($db->query('SELECT * FROM personne WHERE mail=\''.$_POST["email"].'\' AND pwd=\''.$_POST["pwd"].'\'') as $row){
+$log=array();
+foreach($db->query('SELECT * FROM personne WHERE mail=\''.$_POST["mail"].'\' AND pwd=\''.$_POST["pwd"].'\'') as $row){
     array_push($log,$row["id"]);
     array_push($log,$row["mail"]);
     array_push($log,$row["pwd"]);

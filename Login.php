@@ -23,7 +23,7 @@ session_destroy(); // Si on a accès à la page de login c'est qu'on est déjà 
         } 
       ?>
       <label for="inputEmail" class="sr-only">Email address</label>
-      <input name="email" type="email" id="inputEmail" class="form-control" placeholder="E-mail" required="" autofocus="">
+      <input name="mail" type="email" id="inputEmail" class="form-control" placeholder="E-mail" required="" autofocus="">
       <label for="inputPassword" class="sr-only">Password</label>
       <input name="pwd" style="margin-top:1em" type="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required="">
       <button style="margin-top:1em" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
