@@ -19,10 +19,10 @@ include 'navbar/Header_nolog.php'; // On ajoute le header
         }
         ?>
         <div class="form-group">
-            <input name="mail" type="email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" placeholder="E-mail">
+            <input required name="mail" type="email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" placeholder="E-mail">
         </div>
         <div class="form-group">
-            <input name="pwd" type="password" class="form-control" id="InputPassword1" placeholder="Mot de passe">
+            <input required name="pwd" type="password" class="form-control" id="InputPassword1" placeholder="Mot de passe">
         </div>
         <button type="submit" class="btn btn-primary">S'inscrire</button>
     </form>
