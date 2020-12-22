@@ -6,6 +6,70 @@
 
 include "../donnees/Donnees.inc.php";
 
+function indexCategorie(string $categorie){
+    include "../donnees/Donnees.inc.php";
+    $hierarchie_keys=array_keys($Hierarchie);
+    for ($i=0;$i<sizeof($Hierarchie);$i++){ //Pour chaque catégorie
+        $nb_categorie=sizeof($Hierarchie[$hierarchie_keys[$i]]); // Nombre de chaque sous categorie
+        if (strcmp(array_keys($Hierarchie)[$i],$categorie)==0){
+            return $i;
+        }
+    }
+    return -1;
+}
+
+function sousCategorie(string $categorie){
+    include "../donnees/Donnees.inc.php";
+    $array_categorie=array();
+    $hierarchie_keys=array_keys($Hierarchie);
+    for ($i=0;$i<sizeof($Hierarchie);$i++){ //Pour chaque catégorie
+        $nb_categorie=sizeof($Hierarchie[$hierarchie_keys[$i]]); // Nombre de chaque sous categorie
+        if (strcmp(array_keys($Hierarchie)[$i],$categorie)==0){ // On filtre la bonne catégorie
+            for ($a=0;$a<$nb_categorie;$a++){ // Pour chaque sous categorie
+                $array_categorie=$Hierarchie[$hierarchie_keys[$i]]; // Pour chaque catégorie on a l'array des sous/super categorie
+                $key_categorie = array_keys($array_categorie);
+                if (strcmp($key_categorie[$a],"sous-categorie")==0){ // Si il y a une sous categorie
+                    $categorie_keys=array_keys($array_categorie[$key_categorie[$a]]); //Array des clés des sous/super categorie
+                    for ($s=0;$s<sizeof($categorie_keys);$s++){ // Pour chaque élement de la sous catégorie
+                        $element = $array_categorie[$key_categorie[$a]][$categorie_keys[$s]];
+                        array_push($array_categorie,$element);
+                    }
+                    return $array_categorie;
+                }
+                echo"</ol>";
+                
+            }
+        }
+    }
+    return -1;
+}
+
+function superCategorie(string $categorie){
+    include "../donnees/Donnees.inc.php";
+    $array_categorie=array();
+    $hierarchie_keys=array_keys($Hierarchie);
+    for ($i=0;$i<sizeof($Hierarchie);$i++){ //Pour chaque catégorie
+        $nb_categorie=sizeof($Hierarchie[$hierarchie_keys[$i]]); // Nombre de chaque sous categorie
+        if (strcmp(array_keys($Hierarchie)[$i],$categorie)==0){ // On filtre la bonne catégorie
+            for ($a=0;$a<$nb_categorie;$a++){ // Pour chaque sous categorie
+                $array_categorie=$Hierarchie[$hierarchie_keys[$i]]; // Pour chaque catégorie on a l'array des sous/super categorie
+                $key_categorie = array_keys($array_categorie);
+                if (strcmp($key_categorie[$a],"super-categorie")==0){ // Si il y a une sous categorie
+                    $categorie_keys=array_keys($array_categorie[$key_categorie[$a]]); //Array des clés des sous/super categorie
+                    for ($s=0;$s<sizeof($categorie_keys);$s++){ // Pour chaque élement de la sous catégorie
+                        $element = $array_categorie[$key_categorie[$a]][$categorie_keys[$s]];
+                        array_push($array_categorie,$element);
+                    }
+                    return $array_categorie;
+                }
+                echo"</ol>";
+                
+            }
+        }
+    }
+    return -1;
+}
+
 echo "<h2>Recettes : </h2>";
 
 for ($i=0 ; $i<sizeof($Recettes) ; $i++){ // Pour chaque recette
