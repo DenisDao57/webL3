@@ -4,7 +4,7 @@
 
 <?php
 
-include "Donnees.inc.php";
+include "../donnees/Donnees.inc.php";
 
 echo "<h2>Recettes : </h2>";
 

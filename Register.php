@@ -6,6 +6,7 @@
 session_start();
 include 'navbar/Header_nolog.php'; // On ajoute le header
 
+
 ?>
 
 <body class="text-center">

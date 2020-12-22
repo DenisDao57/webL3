@@ -6,6 +6,7 @@
 session_start();
 
 include '../bdd.php';
+include '../Hashcode.php';
 
 //// DEFINITION ID
 $array_id=array();
@@ -29,7 +30,7 @@ if (sizeof($array_mail)>0){
     $stmt = $db->prepare("INSERT INTO personne (id,mail,pwd) VALUES (:id,:mail,:pwd)");
     $stmt->bindParam(":id",$id);
     $stmt->bindParam(":mail",$_POST["mail"]);
-    $stmt->bindParam(":pwd",$_POST["pwd"]);
+    $stmt->bindParam(":pwd",hash($HASH_CODE,$_POST["pwd"]));
     $stmt->execute();
     header('location:../Login.php');
 

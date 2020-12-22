@@ -74,13 +74,14 @@ function superCategorie(string $categorie){
 $array_utilise = array();
 $index_aliment = indexCategorie("Aliment");
 
-echo "<h2>Aliment</h2>";
-echo "<ul id='myUL'>";
+
+echo "<ul style='color:white;' id='myUL'>";
+echo "<h2 class='text-center'>Aliment</h2>";
 
 $sous_categorie_aliment=sousCategorie("Aliment");
 // Aliment est print en dur car c'est le plus haut de la hierarchie complète
 for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment  
-    echo"<li> <span class ='caret'> ".$sous_categorie_aliment[$i]."</span>";
+    echo"<li> <span class ='caret'> </span>".$sous_categorie_aliment[$i];
     $subcategorie1=sousCategorie((String) $sous_categorie_aliment[$i]);
     echo "<ul class='nested'>";
     if($subcategorie1!=-1){
@@ -88,7 +89,7 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
             $subcategorie2=sousCategorie((String) $subcategorie1[$a]);
 
             if ($subcategorie2==-1)echo"<li>".$subcategorie1[$a]."</li>";
-            else echo"<li><span class = 'caret'>".$subcategorie1[$a]."</span>";
+            else echo"<li><span class = 'caret'></span>".$subcategorie1[$a];
 
             echo "<ul class='nested'>";
             if($subcategorie2!=-1){
@@ -96,7 +97,7 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                     $subcategorie3=sousCategorie((String) $subcategorie2[$b]);
 
                     if($subcategorie3==-1) echo"<li>".$subcategorie2[$b]."</li>";
-                    else echo"<li><span class='caret'>".$subcategorie2[$b]."</span>";
+                    else echo"<li><span class='caret'></span>".$subcategorie2[$b];
 
                     echo "<ul class='nested'>";
                     if($subcategorie3!=-1){
@@ -104,12 +105,12 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                             $subcategorie4=sousCategorie((String) $subcategorie3[$c]);
 
                             if ($subcategorie4==-1) echo"<li>".$subcategorie3[$c]."</li>";
-                            else echo"<li><span class='caret'>".$subcategorie3[$c]."</span>";
+                            else echo"<li><span class='caret'></span>".$subcategorie3[$c];
                             
                             echo "<ul class='nested'>";
                             if($subcategorie4!=-1){
                                 for ($d=0;$d<sizeof($subcategorie4)-2;$d++){
-                                    echo"<li>".$subcategorie4[$d]."</li>";
+                                    echo"<li></li>".$subcategorie4[$d];
     
                                 }
                         
