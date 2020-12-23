@@ -25,7 +25,17 @@ include "util_bdd.php";
 
     <div style="color:white">
         <form action="Accueil.php" method="post" class="form-inline">
-            <input name="filtrage_nom" class="form-control" placeholder="Nom cocktail">
+            <input list="recettes"name="filtrage_nom" class="form-control" placeholder="Nom cocktail">
+            <datalist id="recettes">
+                    <?php
+                    $liste_recette=array();
+                    $liste_recette=getRecettes();
+                    for ($i=0;$i<sizeof($liste_recette);$i++){
+                        echo "<option value='".$liste_recette[$i]."'>";
+                    }
+                    
+                    ?>
+            </datalist>
             <button id="btn_filtre" type="submit" class="btn btn-primary">Rechercher</button>
         </form>
     </div>
