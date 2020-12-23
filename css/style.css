@@ -44,8 +44,6 @@
     background-color: #34568B;
     color: white;
     border: none;
-    position: fixed;
-
     border-radius:5px 5px;
   }
   
@@ -69,3 +67,6 @@
     margin-right:35%;
   }
 
+  #btn_filtre{
+    margin-left:5%;
+  }

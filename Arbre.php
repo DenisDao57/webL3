@@ -80,7 +80,8 @@ echo "<h2 class='text-center'>Aliment</h2>";
 
 $sous_categorie_aliment=sousCategorie("Aliment");
 // Aliment est print en dur car c'est le plus haut de la hierarchie complète
-for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment  
+for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment 
+    
     echo"<li> <span class ='caret'> </span>".$sous_categorie_aliment[$i];
     $subcategorie1=sousCategorie((String) $sous_categorie_aliment[$i]);
     echo "<ul class='nested'>";
