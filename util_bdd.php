@@ -40,7 +40,7 @@ function affichage_liste_filtre($nom,$favoris,$index)
     }else $sqlquery='SELECT * FROM recettes WHERE titre LIKE "%' . $nom . '%" ';
     foreach ($db->query($sqlquery) as $row) {
 
-        echo '<a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">';
+        echo '<a  name = ' . $row["id"] . ' class="list-group-item list-group-item-action flex-column align-items-start ">';
         echo '<div class="d-flex w-100 justify-content-between">';
         echo '<h2 class="mb-1">' . $row["titre"] . '</h2>'; // Affichage du titre
         echo "</div>";

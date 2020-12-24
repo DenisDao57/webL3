@@ -27,7 +27,7 @@ if ((sizeof($recettes) > 0)) {
         echo "Error deleting record: " . $db->error;
     }
     
-    header('location:../'.$_GET["index"].'.php');
+    header('location:../'.$_GET["index"].'.php#'.$id_recette);
 }
 
 ?>

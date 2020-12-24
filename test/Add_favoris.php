@@ -23,7 +23,7 @@ if (!(sizeof($recettes)>0)){
     $stmt->bindParam(":id_personne",$id_personne);
     $stmt->bindParam(":id_recette",$id_recette);
     $stmt->execute();
-    header('location:../index.php');
+    header('location:../index.php#'.$id_recette);
 }
 
 ?>
