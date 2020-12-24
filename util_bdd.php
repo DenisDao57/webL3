@@ -1,79 +1,95 @@
 <?php
 
-function affichage_liste_filtre($nom)
+
+function ingredient_recette($id_recette, $db)
 {
-    include "donnees/Donnees.inc.php";
-    if (str_replace(' ', '', $nom) != "") {
-        for ($i = 0; $i < sizeof($Recettes); $i++) { // Pour chaque recette
-            if (stripos($Recettes[$i]["titre"], $nom) !== false) { /// Si on trouve
-                echo '<a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">';
-                for ($a = 0; $a < sizeof(array_keys($Recettes[$i])); $a++) { // Pour une recette en particulier (pour chaque clé de l'array d'une recette)
-                    $recette_key = array_keys($Recettes[$i])[$a];
 
-                    if ($recette_key != "index") {
-                        if ($recette_key == "titre") { // Traitement du titre
+    $ingredients = array();
 
-                            echo '<div class="d-flex w-100 justify-content-between">';
-                            echo '<h2 class="mb-1">' . $Recettes[$i][$recette_key] . '</h2>'; // Affichage du titre
+    foreach ($db->query('SELECT * FROM recettes as R,ingredient as I,ingredientpourrecette as IPR WHERE R.id=IPR.idRecette
+    AND IPR.idIngredient=I.id 
+    AND IPR.idRecette=' . $id_recette) as $row) {
 
-                            if (isset($_SESSION["login"])) {
-                                if ($_SESSION["login"]) {
-                                    echo '<button type="button" class="btn btn-danger">Favoris</button>';
-                                }
-                            };
-                            echo "</div>";
-                        } else { // Traitement des autres champs (texte)
-                            echo "<h4>" . ucfirst($recette_key) . " : </h4>"; // Affichage sous titre
-                            echo "<p>" . $Recettes[$i][$recette_key] . "</p>"; // Affichage texte
-                        }
-                    } else { // Traitement de INDEX (ingrédients)
-                        $index = $Recettes[$i][$recette_key];
-                        echo "<ol>";
-                        for ($s = 0; $s < sizeof($index); $s++) { // Pour chaque item de l'array index
-                            echo "<li>" . $index[$s] . "</li>"; // Affichage ingrédients
-                        }
-                        echo "</ol>";
-                    }
-                }
-                echo "</a>";
-            }
-        }
-    } else { // Si le string est vide, on met tout 
-        for ($i = 0; $i < sizeof($Recettes); $i++) { // Pour chaque recette
-            echo '<a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">';
-            for ($a = 0; $a < sizeof(array_keys($Recettes[$i])); $a++) { // Pour une recette en particulier (pour chaque clé de l'array d'une recette)
-                $recette_key = array_keys($Recettes[$i])[$a];
-
-                if ($recette_key != "index") {
-                    if ($recette_key == "titre") { // Traitement du titre
-
-                        echo '<div class="d-flex w-100 justify-content-between">';
-                        echo '<h2 class="mb-1">' . $Recettes[$i][$recette_key] . '</h2>'; // Affichage du titre
-
-                        if (isset($_SESSION["login"])) {
-                            if ($_SESSION["login"]) {
-                                echo '<button type="button" class="btn btn-danger">Favoris</button>';
-                            }
-                        };
-                        echo "</div>";
-                    } else { // Traitement des autres champs (texte)
-                        echo "<h4>" . ucfirst($recette_key) . " : </h4>"; // Affichage sous titre
-                        echo "<p>" . $Recettes[$i][$recette_key] . "</p>"; // Affichage texte
-                    }
-                } else { // Traitement de INDEX (ingrédients)
-                    $index = $Recettes[$i][$recette_key];
-                    echo "<ol>";
-                    for ($s = 0; $s < sizeof($index); $s++) { // Pour chaque item de l'array index
-                        echo "<li>" . $index[$s] . "</li>"; // Affichage ingrédients
-                    }
-                    echo "</ol>";
-                }
-            }
-            echo "</a>";
-        }
+        array_push($ingredients, $row["nomIngredient"]);
     }
+
+    return $ingredients;
 }
 
+
+function quantite_recette($id_recette, $db)
+{
+
+    $quantite = array();
+
+    foreach ($db->query('SELECT * FROM recettes as R,ingredient as I,ingredientpourrecette as IPR WHERE R.id=IPR.idRecette
+    AND IPR.idIngredient=I.id 
+    AND IPR.idRecette=' . $id_recette) as $row) {
+
+        array_push($quantite, $row["quantity"]);
+    }
+
+    return $quantite;
+}
+
+function affichage_liste_filtre($nom,$favoris,$index)
+{
+    include "bdd.php";
+    if ($favoris){
+        $sqlquery='SELECT * FROM recettes,favoris WHERE titre LIKE "%' . $nom . '%"'.'AND favoris.id_recette=recettes.id AND favoris.id_utilisateur='.$_SESSION["id"];
+    }else $sqlquery='SELECT * FROM recettes WHERE titre LIKE "%' . $nom . '%" ';
+    foreach ($db->query($sqlquery) as $row) {
+
+        echo '<a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">';
+        echo '<div class="d-flex w-100 justify-content-between">';
+        echo '<h2 class="mb-1">' . $row["titre"] . '</h2>'; // Affichage du titre
+        echo "</div>";
+
+        echo "<h4> Dosage : </h4>";
+
+        $array_quantite = quantite_recette($row["id"], $db);
+
+        echo "<p>   ";
+
+        for ($i = 0; $i < sizeof($array_quantite); $i++) {
+            echo $array_quantite[$i];
+            if ($i < sizeof($array_quantite) - 1) echo ", ";
+        }
+
+        echo "</p>";
+
+        echo "<h4> Préparation : </h4>";
+
+        echo "<p>";
+
+        echo $row["preparation"];
+
+        echo "</p>";
+
+        $array_ingredients = ingredient_recette($row["id"], $db);
+
+        echo "<h4> Ingrédients : </h4>";
+
+        echo "<ol>";
+
+        for ($i = 0; $i < sizeof($array_ingredients); $i++) {
+            echo "<li>" . $array_ingredients[$i] . "</li>";
+        }
+
+        echo "</ol>";
+
+        echo "</a>";
+
+
+        if (isset($_SESSION["login"])) {
+            if ($_SESSION["login"] == true) {
+                if (isFavoris($_SESSION["id"], $row['id'], $db) == true) { // Si il est déjà en favoris.
+                    echo '<a style="color:red;" href="test/delete_favoris.php?recette=' . $row["id"] . '&personne=' . $_SESSION["id"] . ' &index='.$index.'"> Enlever des favoris </a>';
+                } else echo '<a href="test/add_favoris.php?recette=' . $row["id"] . '&personne=' . $_SESSION["id"] . '"> Ajouter aux favoris </a>';
+            }
+        };
+    }
+}
 
 function getRecettes()
 {
@@ -86,5 +102,18 @@ function getRecettes()
     return $liste_recette;
 }
 
+
+function isFavoris($id_utilisateur, $id_recette, $db)
+{
+    $array_fav = array();
+    foreach ($db->query('SELECT * FROM favoris WHERE id_utilisateur = ' . $id_utilisateur . ' AND id_recette=' . $id_recette) as $row) {
+        array_push($array_fav, $row["id_recette"]);
+    }
+    if (sizeof($array_fav) <= 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 ?>

@@ -1,10 +1,16 @@
 <?php
 
-
+/*
 define('DB_SERVER', 'bt2zdg2wq1msrihj3pq9-mysql.services.clever-cloud.com');
 define('DB_USERNAME', 'uyayoi3vygszk7do');
 define('DB_PASSWORD', 'd6ieT4H86o1Ei8zGFfam');
 define('DB_NAME','bt2zdg2wq1msrihj3pq9');
+*/
+
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_NAME','cocktails');
 
 $log=array(); 
 try{

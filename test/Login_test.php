@@ -19,7 +19,7 @@ foreach($db->query('SELECT * FROM personne WHERE mail=\''.$_POST["mail"].'\' AND
 if (sizeof($log)>0){
     $_SESSION["login"]=true;
     $_SESSION["id"]=$row["id"];
-    header('location:../Accueil.php');
+    header('location:../Index.php');
 }else{
     header('location:../Login.php?test=f');
 }
