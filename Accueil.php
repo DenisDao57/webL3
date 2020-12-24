@@ -7,6 +7,8 @@
 
 session_start();
 
+
+
 if (isset($_SESSION['login'])) { // Gestion du header
     if ($_SESSION['login'] = true) {
         include 'navbar/Header_logged.php';
@@ -20,6 +22,7 @@ include "util_bdd.php";
 ?>
 
 <script type="text/javascript" src="js/sidebar.js"></script>
+
 
 <body>
 
@@ -53,9 +56,19 @@ include "util_bdd.php";
 
             <?php
 
-            if (isset($_POST["filtrage_nom"])) {
-                affichage_liste_filtre($_POST["filtrage_nom"]);
-            } else affichage_liste_filtre("");
+
+            if (isset($_GET["ingredientName"]))
+            {
+                affichage_liste_filtre_by_ingredient($_GET["ingredientName"]);
+            }
+            else
+            {
+                if (isset($_POST["filtrage_nom"])) {
+                    affichage_liste_filtre($_POST["filtrage_nom"]);
+                } else affichage_liste_filtre("");
+            }
+        
+            
 
             ?>
 

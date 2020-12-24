@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="test/tree.css">
 <?php
 
+
+
 include "donnees/Donnees.inc.php";
 
 function indexCategorie(string $categorie){
@@ -80,8 +82,7 @@ echo "<h2 class='text-center'>Aliment</h2>";
 
 $sous_categorie_aliment=sousCategorie("Aliment");
 // Aliment est print en dur car c'est le plus haut de la hierarchie complète
-for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment 
-    
+for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment  
     echo"<li> <span class ='caret'> </span>".$sous_categorie_aliment[$i];
     $subcategorie1=sousCategorie((String) $sous_categorie_aliment[$i]);
     echo "<ul class='nested'>";
@@ -89,7 +90,7 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
         for ($a=0;$a<sizeof($subcategorie1)-2;$a++){
             $subcategorie2=sousCategorie((String) $subcategorie1[$a]);
 
-            if ($subcategorie2==-1)echo"<li>".$subcategorie1[$a]."</li>";
+            if ($subcategorie2==-1)echo"<li onclick=\"onClickAliment('".$subcategorie1[$a]."')\" id='aliment'>".$subcategorie1[$a]."</li>";
             else echo"<li><span class = 'caret'></span>".$subcategorie1[$a];
 
             echo "<ul class='nested'>";
@@ -97,7 +98,7 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                 for ($b=0;$b<sizeof($subcategorie2)-2;$b++){
                     $subcategorie3=sousCategorie((String) $subcategorie2[$b]);
 
-                    if($subcategorie3==-1) echo"<li>".$subcategorie2[$b]."</li>";
+                    if($subcategorie3==-1) echo"<li onclick=\"onClickAliment('".$subcategorie1[$b]."')\" id='aliment'>".$subcategorie2[$b]."</li>";
                     else echo"<li><span class='caret'></span>".$subcategorie2[$b];
 
                     echo "<ul class='nested'>";
@@ -105,13 +106,14 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                         for ($c=0;$c<sizeof($subcategorie3)-2;$c++){
                             $subcategorie4=sousCategorie((String) $subcategorie3[$c]);
 
-                            if ($subcategorie4==-1) echo"<li>".$subcategorie3[$c]."</li>";
+                            if ($subcategorie4==-1) echo"<li onclick=\"onClickAliment('".$subcategorie3[$c]."')\" id='aliment'>".$subcategorie3[$c]."</li>";
                             else echo"<li><span class='caret'></span>".$subcategorie3[$c];
                             
                             echo "<ul class='nested'>";
                             if($subcategorie4!=-1){
                                 for ($d=0;$d<sizeof($subcategorie4)-2;$d++){
-                                    echo"<li></li>".$subcategorie4[$d];
+                                    echo"<li onclick=\"onClickAliment('".$subcategorie4[$d]."')\" id='aliment'> ".$subcategorie4[$d]."</li>";
+
     
                                 }
                         

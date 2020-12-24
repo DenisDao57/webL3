@@ -87,4 +87,70 @@ function getRecettes()
 }
 
 
+
+function affichage_liste_filtre_by_ingredient($ingredient)
+{
+    include "bdd_xampp.php";
+
+
+
+    $idRecettesQuery =  "SELECT idRecette FROM cocktails.recettes
+               INNER JOIN cocktails.ingredientpourrecette ON cocktails.recettes.id = cocktails.ingredientpourrecette.idRecette 
+               INNER JOIN cocktails.ingredient ON cocktails.ingredientpourrecette.idIngredient = cocktails.ingredient.id 
+               WHERE cocktails.ingredient.nomIngredient = '".$ingredient."'";
+
+    $recetteQuery = "SELECT titre, preparation FROM cocktails.recettes WHERE id = ";
+
+    $quantiteIngredientRecette = "SELECT quantity FROM cocktails.ingredientpourrecette WHERE idRecette = ";
+
+    $idRecettesQueryResult = $db->query($idRecettesQuery);
+
+    while($idRecette = $idRecettesQueryResult->fetch())
+    {
+        //echo "id =".$idRecette['idRecette']."<br>";
+
+        echo '<a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">';
+
+        $recetteResult = $db->query($recetteQuery.$idRecette['idRecette']);
+
+        while($recette = $recetteResult->fetch())
+        {
+            echo '<div class="d-flex w-100 justify-content-between">';
+            //echo $recette['titre']."<br>";
+            echo '<h2 class="mb-1">' . $recette['titre'] . '</h2>'; // Affichage du titre
+            if (isset($_SESSION["login"])) {
+                if ($_SESSION["login"]) {
+                    echo '<button type="button" class="btn btn-danger">Favoris</button>';
+                }
+            };
+
+
+            echo "</div>";
+            echo "<h4>Préparation : </h4>";
+            echo "<p>" . $recette['preparation'] . "</p>";
+        }
+
+        
+
+        echo "<h4>Ingrédients : </h4>";
+
+        $QuantityResult = $db->query($quantiteIngredientRecette.$idRecette['idRecette']);
+        echo "<ul>";
+        while($quantity = $QuantityResult->fetch())
+        {
+            echo "<li>" . $quantity['quantity']. "</li>"; 
+        }
+        echo "</ul>";
+
+
+        echo "</a>";
+        
+    }
+
+
+    $db = NULL;
+
+}
+
+
 ?>
