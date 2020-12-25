@@ -76,3 +76,36 @@
     margin-top:2%;
     margin-right:0%;
   }
+
+  #button {
+    display: inline-block;
+    background-color: #FF9800;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 4px;
+    margin: 30px;
+    position: fixed;
+    bottom: 1px;
+    right: 1px;
+    z-index: 1000;
+    transition: background-color .3s, 
+    opacity .5s, visibility .5s;
+  }
+  #button:hover {
+    cursor: pointer;
+    background-color: #333;
+  }
+  #button:active {
+    background-color: #555;
+  }
+
+  #button::after {
+    content: "\f077";
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 2em;
+    line-height: 50px;
+    color: #fff;
+  }

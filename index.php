@@ -2,6 +2,8 @@
 
 <link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
 <?php
 
 
@@ -21,8 +23,9 @@ include "util_bdd.php";
 
 ?>
 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 <script type="text/javascript" src="js/sidebar.js"></script>
-
+<a id="button"></a>
 <body>
     <div id="Sidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -35,8 +38,6 @@ include "util_bdd.php";
 
     <div style="color:white">
         <form id="filtre_form" action="index.php" method="post" class="p-3 m-0 mb-2 border border-primary form-inline">
-
-
                 <?php
                     echo "<div style='color:black;margin-right:1%'>Favoris</div>";
                     echo '<input style="color:black;margin-right:4%" type="checkbox" id="checkfavoris" name="favoris" value="favoris">';
@@ -55,7 +56,6 @@ include "util_bdd.php";
             <button id="btn_filtre" type="submit" class="btn btn-primary">Rechercher</button>
         </form>
     </div>
-
 
         <div class="list-group">
 
