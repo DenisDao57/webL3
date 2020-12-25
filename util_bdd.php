@@ -55,7 +55,18 @@ function affichage_liste_filtre($nom, $favoris, $index)
     }
     foreach ($db->query($sqlquery) as $row) {
 
-        echo '<a  name = ' . $row["id"] . ' class="list-group-item list-group-item-action flex-column align-items-start ">';
+        echo '<a  name = ' . $row["id"] . ' class="list-group-item list-group-item-action d-flex align-items-start ">';
+        echo "<div class = row>";
+
+        if (file_exists("image/".$row["titre"].".jpg")){ //// Gestion de l'image
+            echo "<div class= col-3>";
+            echo "<img style='width:100%;' src='image/".$row["titre"].".jpg'>";
+            echo "</div>";
+            echo "<div class = col-9>";
+        }else{
+            echo "<div>";
+        } //// Fin gestion image
+
         echo '<div class="d-flex w-100 justify-content-between">';
         echo '<h2 class="mb-1">' . $row["titre"] . '</h2>'; // Affichage du titre
         echo "</div>";
@@ -66,7 +77,7 @@ function affichage_liste_filtre($nom, $favoris, $index)
 
         echo "<p>   ";
 
-        for ($i = 0; $i < sizeof($array_quantite); $i++) {
+        for ($i = 0; $i < sizeof($array_quantite); $i++) { // Texte quantité 
             echo $array_quantite[$i];
             if ($i < sizeof($array_quantite) - 1) echo ", ";
         }
@@ -77,7 +88,7 @@ function affichage_liste_filtre($nom, $favoris, $index)
 
         echo "<p>";
 
-        echo $row["preparation"];
+        echo $row["preparation"]; // Texte préparation
 
         echo "</p>";
 
@@ -87,11 +98,13 @@ function affichage_liste_filtre($nom, $favoris, $index)
 
         echo "<ol>";
 
-        for ($i = 0; $i < sizeof($array_ingredients); $i++) {
+        for ($i = 0; $i < sizeof($array_ingredients); $i++) { // Liste ingrédients
             echo "<li>" . $array_ingredients[$i] . "</li>";
         }
 
         echo "</ol>";
+        
+        echo "</div> </div>";
 
         echo "</a>";
 
@@ -111,7 +124,7 @@ function affichage_liste_filtre($nom, $favoris, $index)
                 echo '<a href="test/add_favoris.php?recette=' . $row["id"] . '&personne=' . -1 . '"> Ajouter aux favoris </a>';
             }
         }
-    }
+    } ///////////////////////////////////////// FIN FAVORIS
 }
 
 function getRecettes()
@@ -128,6 +141,10 @@ function getRecettes()
 
 
 function affichage_liste_filtre_by_ingredient($ingredient)
+
+/// Faut rajouter les images et le bouton favoris 
+
+
 {
     include "bdd_xampp.php";
 
@@ -180,27 +197,9 @@ function affichage_liste_filtre_by_ingredient($ingredient)
 
 
         echo "</a>";
-
-        if (isset($_SESSION["login"])) { ///////////////////////// FAVORIS 
-            if ($_SESSION["login"] == true) {
-                if (isFavoris($_SESSION["id"], $row['id'], $db) == true) { // Si il est déjà en favoris.
-                    echo '<a style="color:red;" href="test/delete_favoris.php?recette=' . $row["id"] . '&personne=' . $_SESSION["id"] . ' &index=' . $index . '"> Enlever des favoris </a>';
-                } else echo '<a href="test/add_favoris.php?recette=' . $row["id"] . '&personne=' . $_SESSION["id"] . '"> Ajouter aux favoris </a>';
-            }
-        } else { ///// Pas connecté
-            if (isset($_SESSION["favoris"])) {
-                if (isFavoristemp($row["id"])) { // Si il est déjà en favoris.
-                    echo '<a style="color:red;" href="test/delete_favoris.php?recette=' . $row["id"] . '&personne=' . -1 . ' &index=' . $index . '"> Enlever des favoris </a>';
-                } else echo '<a href="test/add_favoris.php?recette=' . $row["id"] . '&personne=' . -1 . '"> Ajouter aux favoris </a>';
-            }else{
-                echo '<a href="test/add_favoris.php?recette=' . $row["id"] . '&personne=' . -1 . '"> Ajouter aux favoris </a>';
-            }
-        }
-
     }
-
-
     $db = NULL;
+    
 }
 
 function isFavoris($id_utilisateur, $id_recette, $db)
