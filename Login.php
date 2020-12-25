@@ -7,7 +7,11 @@ include 'bdd.php';
 include 'navbar/Header_nolog.php'; // On ajoute le header
 
 session_start();
-session_destroy(); // Si on a accès à la page de login c'est qu'on est déjà deconnecté, soit qu'on a appuyé sur le bouton de deconnexion
+
+if (isset($_GET["deco"])){
+  session_destroy();
+}
+// Si on a accès à la page de login c'est qu'on est déjà deconnecté, soit qu'on a appuyé sur le bouton de deconnexion
 
 ?>
 

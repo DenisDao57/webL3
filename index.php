@@ -23,7 +23,6 @@ include "util_bdd.php";
 
 <script type="text/javascript" src="js/sidebar.js"></script>
 
-
 <body>
     <div id="Sidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -35,18 +34,12 @@ include "util_bdd.php";
     <div id="main">
 
     <div style="color:white">
-        <form id="filtre_form" action="index.php" method="post" class="p-3 border border-primary form-inline">
+        <form id="filtre_form" action="index.php" method="post" class="p-3 m-0 mb-2 border border-primary form-inline">
 
 
                 <?php
-
-                if (isset($_SESSION['login'])) {
-                    if ($_SESSION['login'] = true) {
-                        echo "<div style='color:black;margin-right:1%'>Favoris</div>";
-                        echo '<input style="color:black;margin-right:4%" type="checkbox" id="checkfavoris" name="favoris" value="favoris">';
-                    }
-                }
-
+                    echo "<div style='color:black;margin-right:1%'>Favoris</div>";
+                    echo '<input style="color:black;margin-right:4%" type="checkbox" id="checkfavoris" name="favoris" value="favoris">';
                 ?>
             <input list="recettes"name="filtrage_nom" class="form-control" placeholder="Nom cocktail">
             <datalist id="recettes">

@@ -103,8 +103,8 @@
 
       //Creation de la table
       $sql = "CREATE TABLE ".$tablename."(
-          id_utilisateur INT(6) NOT NULL,
-          id_recette INT(6) NOT NULL 
+          id_utilisateur INT(6) PRIMARY KEY NOT NULL,
+          id_recette INT(6) PRIMARY KEY NOT NULL 
           )";
 
       if ($conn->query($sql) != TRUE)
