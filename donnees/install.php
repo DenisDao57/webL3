@@ -106,7 +106,8 @@
           id_utilisateur INT(6) UNSIGNED NOT NULL,
           id_recette INT(6) UNSIGNED NOT NULL,
           FOREIGN KEY(id_recette) REFERENCES recettes(id),
-          FOREIGN KEY(id_utilisateur) REFERENCES personne(id)
+          FOREIGN KEY(id_utilisateur) REFERENCES personne(id),
+          PRIMARY KEY (id_utilisateur,id_recette)
           
           )";
 

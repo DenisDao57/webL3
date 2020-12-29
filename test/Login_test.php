@@ -19,6 +19,8 @@ foreach($db->query('SELECT * FROM personne WHERE mail=\''.$_POST["mail"].'\' AND
 if (sizeof($log)>0){ // Si on trouve bien l'utilisateur (> 0 car avec la requete SQL on trouvera forcement une seul personne ou 0)
     $_SESSION["login"]=true;
     $_SESSION["id"]=$row["id"];
+    $_SESSION["pwd_old"]=$row["pwd"];
+    $_SESSION["mail"]=$row["mail"];
     if (isset($_SESSION["favoris"]))
     header('location:../test/Add_tempfavoris.php');
     else  header('location:../index.php');

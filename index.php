@@ -36,8 +36,6 @@ include "util_bdd.php";
 ?>
 
 
-
-
 <script type="text/javascript" src="js/sidebar.js"></script>
 <script type="text/javascript" src="js/favoris.js"></script>
 <a id="button"></a>

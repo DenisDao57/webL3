@@ -82,9 +82,10 @@ echo "<h2 class='text-center'>Aliment</h2>";
 
 $sous_categorie_aliment=sousCategorie("Aliment");
 // Aliment est print en dur car c'est le plus haut de la hierarchie complète
-for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment  
-    echo"<li> <span class ='caret'> </span>".$sous_categorie_aliment[$i];
+for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment 
     $subcategorie1=sousCategorie((String) $sous_categorie_aliment[$i]);
+    if ($subcategorie1!=-1) echo"<li> <span class ='caret'> </span>".$sous_categorie_aliment[$i];
+    else echo "<li onclick=\"onClickAliment('".$sous_categorie_aliment[$i]."')\" id='aliment'>".$sous_categorie_aliment[$i]."</li>";
     echo "<ul class='nested'>";
     if($subcategorie1!=-1){
         for ($a=0;$a<sizeof($subcategorie1)-2;$a++){
