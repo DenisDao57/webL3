@@ -8,6 +8,7 @@
             <a href="index.php" class="nav-item nav-link active">Recettes</a>
         </div>
         <div class="navbar-nav ml-auto">
-            <a href="Login?deco=f.php" class="nav-item nav-link">Deconnexion</a>
+            <a href="index.php?favoris=true" class="nav-item nav-link active">Favoris</a>
+            <a href="Login.php?deco=f.php" class="nav-item nav-link">Deconnexion</a>     
         </div>
 </nav>

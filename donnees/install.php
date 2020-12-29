@@ -12,7 +12,7 @@
     $tableRecette = "Recettes";
     $tableIngredientRecette = "IngredientPourRecette";
     $categoryRacine = "Aliment";
-    $tableName = "IngredientHierarchy";
+    //$tableName = "IngredientHierarchy";
     $tableFavoris = "favoris";
     $tableUtilisateur="personne";
     
@@ -23,12 +23,12 @@
     createTableSousCategorie($servername, $username, $password, $dbname, $tableSousCategorie);
     createTableRecette($servername, $username, $password, $dbname, $tableRecette);
     createTableIngredientPourRecettes($servername, $username, $password, $dbname, $tableIngredientRecette);
-    createTableFavoris($servername,$username,$password,$dbname,$tableFavoris);
     createTableUtilisateur($servername,$username,$password,$dbname,$tableUtilisateur);
+    createTableFavoris($servername,$username,$password,$dbname,$tableFavoris);
 
     peuplerIngredients($categoryRacine, $servername, $username, $password, $dbname, $tableIngredient);
 
-    peuplerSousCategorie($servername, $username, $password, $dbname, $tableIngredient);
+    peuplerSousCategorie($servername, $username, $password, $dbname, $tableSousCategorie);
 
     peuplerRecettes($servername, $username, $password, $dbname, $tableIngredient); 
 
@@ -84,7 +84,7 @@
       if ($conn->query($sql) != TRUE)
       {
         
-        echo "ERREUR creation table ingredient Hierarchy: " . $conn->error;
+        echo "ERREUR creation table ingredient : " . $conn->error;
       }
 
       $conn->close();
@@ -103,14 +103,17 @@
 
       //Creation de la table
       $sql = "CREATE TABLE ".$tablename."(
-          id_utilisateur INT(6) PRIMARY KEY NOT NULL,
-          id_recette INT(6) PRIMARY KEY NOT NULL 
+          id_utilisateur INT(6) UNSIGNED NOT NULL,
+          id_recette INT(6) UNSIGNED NOT NULL,
+          FOREIGN KEY(id_recette) REFERENCES recettes(id),
+          FOREIGN KEY(id_utilisateur) REFERENCES personne(id)
+          
           )";
 
       if ($conn->query($sql) != TRUE)
       {
         
-        echo "ERREUR creation table ingredient Hierarchy: " . $conn->error;
+        echo "ERREUR creation table Favoris: " . $conn->error;
       }
 
       $conn->close();
@@ -137,7 +140,7 @@
       if ($conn->query($sql) != TRUE)
       {
         
-        echo "ERREUR creation table ingredient Hierarchy: " . $conn->error;
+        echo "ERREUR creation table Utilisateur: " . $conn->error;
       }
 
       $conn->close();
@@ -157,7 +160,7 @@
       //Creation de la table
       $sql = "CREATE TABLE ".$tablename."(
           id INT(6) UNSIGNED PRIMARY KEY,
-          titre VARCHAR(128) NOT NULL,
+          titre VARCHAR(512) NOT NULL,
           preparation VARCHAR(1024) NOT NULL
           )";
 
@@ -221,7 +224,7 @@
 
       if ($conn->query($sql) != TRUE)
       {
-        echo "ERREUR creation table ingredient Hierarchy: " . $conn->error;
+        echo "ERREUR creation table sous catégorie: " . $conn->error;
         echo "<br>";
       }
 
@@ -231,7 +234,6 @@
 
     function peuplerIngredients(string $currentCategory,string $servername, string $username, string $password, string $dbname, $tablename)
     {
-
       //echo $currentCategory."<br>";
 
       $id = 1;
@@ -248,13 +250,13 @@
         die("Erreur connexion au serveur" . $conn->connect_error);
       }
 
+      
 
+      $query1 = "SELECT * FROM ".$tablename." WHERE nomIngredient = '".$conn->escape_string($currentCategory)."'";
 
-      $query1 = "SELECT * FROM ".$tablename." WHERE nomIngredient = '".$currentCategory."'";
 
 
       if ($result = $conn->query($query1)) {
-
         if($result->num_rows === 0)
         {
           $query2 = "SELECT MAX(id) AS maxID FROM ".$tablename;
@@ -268,7 +270,10 @@
               
             }
 
-            $query3 = "INSERT INTO ".$tablename." (id, nomIngredient) VALUES (".$id.", '".$currentCategory."')";
+            $query3 = "INSERT INTO ".$tablename." (id, nomIngredient) VALUES (".$id.", '".$conn->escape_string($currentCategory)."')";
+
+            //echo $query3."<br>";
+
             if (!$conn->query($query3))
             {
               echo " <br> Erreur: " . $query3 . "<br>" . $conn->error;
@@ -338,6 +343,7 @@
 
       if ($result = $conn->query($query))
       {
+        print_r($result);
         while ($row = $result->fetch_assoc()) 
         {
             $nomIngredient = $row['nomIngredient'];
@@ -347,16 +353,34 @@
               foreach ($ingredientSousCategorie_key as &$value) {
                 $sousCategorie = $Hierarchie[$nomIngredient]['sous-categorie'][$value];
                 
-                $rechercheIdSouCategorie = "SELECT id FROM ingredient WHERE nomIngredient = '".$sousCategorie."'";
+                $rechercheIdSouCategorie = "SELECT id FROM ingredient WHERE nomIngredient = \"".$sousCategorie."\"";
                 
-                $ligne = $result->fetch_assoc();
+
+                if (!$result2 = $conn->query($rechercheIdSouCategorie))
+                {
+                  echo " <br> ERREUR: " . $rechercheIdSouCategorie . "<br>" . $conn->error;
+                }
+                $ligne = $result2->fetch_assoc();
+                
+
+                
+                //$ligne = $result->fetch_assoc();
                 $idSousCategorie = $ligne['id'];
+                //$idSousCategorie = 1;
 
                 $insertionSousCategorie = "INSERT INTO ingredientsouscategorie (idProduit, sousCategorieId) VALUES (".$row['id'].", ".$idSousCategorie.")";
                 if (!$conn->query($insertionSousCategorie))
                 {
                   echo " <br> Erreur: " . $insertionSousCategorie . "<br>" . $conn->error;
                 }
+              }
+              
+            }
+            else{
+              $insertionSousCategorie = "INSERT INTO ingredientsouscategorie (idProduit, sousCategorieId) VALUES (".$row['id'].", NULL)";
+              if (!$conn->query($insertionSousCategorie))
+              {
+                echo " <br> Erreur: " . $insertionSousCategorie . "<br>" . $conn->error;
               }
             }
         }

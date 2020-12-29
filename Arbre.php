@@ -98,7 +98,7 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                 for ($b=0;$b<sizeof($subcategorie2)-2;$b++){
                     $subcategorie3=sousCategorie((String) $subcategorie2[$b]);
 
-                    if($subcategorie3==-1) echo"<li onclick=\"onClickAliment('".$subcategorie1[$b]."')\" id='aliment'>".$subcategorie2[$b]."</li>";
+                    if($subcategorie3==-1) echo"<li onclick=\"onClickAliment('".$subcategorie2[$b]."')\" id='aliment'>".$subcategorie2[$b]."</li>";
                     else echo"<li><span class='caret'></span>".$subcategorie2[$b];
 
                     echo "<ul class='nested'>";

@@ -19,7 +19,7 @@ function openNav() {
 
     console.log(nomIngredient);
     
-    window.location = "Accueil.php?ingredientName="+nomIngredient;
+    window.location = "index.php?ingredientName="+nomIngredient;
 
   }
   

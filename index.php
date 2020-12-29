@@ -1,6 +1,20 @@
 <html>
 
-<link rel="stylesheet" href="css/bootstrap.css">
+
+<link rel="stylesheet" href="css/all.css" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<!-- Include Twitter Bootstrap and jQuery: -->
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+ 
+<!-- Include the plugin's CSS and JS: -->
+<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+
+
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
@@ -23,8 +37,11 @@ include "util_bdd.php";
 
 ?>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+
+
+
 <script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/favoris.js"></script>
 <a id="button"></a>
 <body>
     <div id="Sidebar" class="sidebar">
@@ -35,49 +52,146 @@ include "util_bdd.php";
     </div>
 
     <div id="main">
+        <div class=".container-fluid">
+            <div  class="row">
 
-    <div style="color:white">
-        <form id="filtre_form" action="index.php" method="post" class="p-3 m-0 mb-2 border border-primary form-inline">
-                <?php
-                    echo "<div style='color:black;margin-right:1%'>Favoris</div>";
-                    echo '<input style="color:black;margin-right:4%" type="checkbox" id="checkfavoris" name="favoris" value="favoris">';
-                ?>
-            <input list="recettes"name="filtrage_nom" class="form-control" placeholder="Nom cocktail">
-            <datalist id="recettes">
-                    <?php
-                    $liste_recette=array();
-                    $liste_recette=getRecettes();
-                    for ($i=0;$i<sizeof($liste_recette);$i++){
-                        echo "<option value='".$liste_recette[$i]."'>";
-                    }
+                <div class="col-sm">
 
-                    ?>
-            </datalist>
-            <button id="btn_filtre" type="submit" class="btn btn-primary">Rechercher</button>
-        </form>
-    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#alimentInclude').multiselect({
+                                includeResetOption: true,
+                                enableFiltering: true,
+                                nSelectedText: ' - Aliments inclus',
+                                nonSelectedText: 'Tout',
+                                maxHeight: 200,
+                                enableCaseInsensitiveFiltering: true,
+                                onChange: function(options, selected)
+                                {
+                                    var caseUpdated = $(options).val();
+                                    if(selected)
+                                    {
+                                        $("#alimentExclude").multiselect('deselect', caseUpdated);
+                                    }                                    
+                                }
+                            });
+                        });
+                    </script>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#alimentExclude').multiselect({
+                                includeResetOption: true,
+                                enableFiltering: true,
+                                nSelectedText: ' - Aliments exclus',
+                                nonSelectedText: 'Rien',
+                                maxHeight: 200,
+                                enableCaseInsensitiveFiltering: true,
+                                onChange: function(options, selected)
+                                {
+                                    var caseUpdated = $(options).val();
+                                    if(selected)
+                                    {
+                                        $("#alimentInclude").multiselect('deselect', caseUpdated);
+                                    }                                    
+                                }
+                            });
+                        });
+                    </script>
+                    <form id="filtre_form" action="index.php" method="post" class="p-3 m-0 mb-2 border border-primary form-inline">
+                        <label class="m-2">Avec</label>
+                        <select id="alimentInclude" name="include[]" multiple="multiple">
+                            <?php
+                                $liste_hierarchy=array();
+                                getHierarchyKeys();
+                                $liste_hierarchy=getHierarchyKeys();
+                                for ($i=0;$i<sizeof($liste_hierarchy);$i++){
+                                    echo "<option value=\"".$liste_hierarchy[$i]."\">".$liste_hierarchy[$i]."</option>";
+                                }
+
+                            ?>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                            <option value="4">Option 4</option>
+                            <option value="5">Option 5</option>
+                            <option value="6">Option 6</option>
+                        </select>
+                        <label class="m-2">Sans</label>
+                        <select id="alimentExclude" name="exclude[]" multiple="multiple">
+                            <?php
+                                $liste_hierarchy=array();
+                                getHierarchyKeys();
+                                $liste_hierarchy=getHierarchyKeys();
+                                for ($i=0;$i<sizeof($liste_hierarchy);$i++){
+                                    echo "<option value=\"".$liste_hierarchy[$i]."\">".$liste_hierarchy[$i]."</option>";
+                                }
+
+                            ?>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                            <option value="4">Option 4</option>
+                            <option value="5">Option 5</option>
+                            <option value="6">Option 6</option>
+                        </select>
+                        
+                        <button id="btn_filtre" type="submit" class="btn btn-primary">Rechercher</button>
+                    </form>
+                </div>
+                <div class="col-sm">
+                    <form id="filtre_form" action="index.php" method="post" class="p-3 m-0 mb-2 border border-primary form-inline">
+                        <input list="recettes"name="filtrage_nom" class="form-control" placeholder="Nom cocktail">
+                        <datalist id="recettes">
+                                <?php
+                                $liste_recette=array();
+                                $liste_recette=getRecettes();
+                                for ($i=0;$i<sizeof($liste_recette);$i++){
+                                    echo "<option value='".$liste_recette[$i]."'>";
+                                }
+
+                                ?>
+                        </datalist>
+                        <button id="btn_filtre" type="submit" class="btn btn-primary">Rechercher</button>
+                    </form>
+                </div>
+            </div>
+        </div>   
 
         <div class="list-group">
 
             <?php
 
-            $favoris=false;
 
-            if (isset($_POST["favoris"])){
-                if ($_POST["favoris"]=="favoris"){
-                    $favoris=true;
+
+
+            
+
+
+            $favoris=false;
+            
+
+            if(isset($_POST['include'])||isset($_POST['exclude']))
+            {
+                affichage_by_idRecetteListe(calculePertinenceOrderedList());
+            }
+            else
+            {
+                if (isset($_GET["favoris"])){
+                    affichageFavoris();
+                }
+                else{
+                    if (isset($_GET["ingredientName"]))
+                    {
+                        affichage_liste_filtre_by_ingredient($_GET["ingredientName"]);
+                    }else{
+                        if (isset($_POST["filtrage_nom"])) {
+                            affichage_liste_filtre($_POST["filtrage_nom"],$favoris,"index");
+                        } else affichage_liste_filtre("",$favoris,"index");
+                    }
                 }
             }
 
-
-            if (isset($_GET["ingredientName"]))
-            {
-                affichage_liste_filtre_by_ingredient($_GET["ingredientName"]);
-            }else{
-                if (isset($_POST["filtrage_nom"])) {
-                    affichage_liste_filtre($_POST["filtrage_nom"],$favoris,"index");
-                } else affichage_liste_filtre("",$favoris,"index");
-            }
+            
 
             ?>
 
