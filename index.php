@@ -23,8 +23,6 @@
 
 session_start();
 
-
-
 if (isset($_SESSION['login'])) { // Gestion du header
     if ($_SESSION['login'] = true) {
         include 'navbar/Header_logged.php';
@@ -109,12 +107,6 @@ include "util_bdd.php";
                                 }
 
                             ?>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                            <option value="4">Option 4</option>
-                            <option value="5">Option 5</option>
-                            <option value="6">Option 6</option>
                         </select>
                         <label class="m-2">Sans</label>
                         <select id="alimentExclude" name="exclude[]" multiple="multiple">
@@ -127,12 +119,6 @@ include "util_bdd.php";
                                 }
 
                             ?>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                            <option value="4">Option 4</option>
-                            <option value="5">Option 5</option>
-                            <option value="6">Option 6</option>
                         </select>
                         
                         <button id="btn_filtre" type="submit" class="btn btn-primary">Rechercher</button>
@@ -176,8 +162,29 @@ include "util_bdd.php";
             }
             else
             {
-                if (isset($_GET["favoris"])){
-                    affichageFavoris();
+                if (isset($_GET["favoris"]))
+                {
+                    if (isset($_SESSION['login']))
+                    {
+                        if ($_SESSION['login'] = true)
+                        {
+                            affichageFavoris();
+                        }
+                        else
+                        {
+                            if(isset($_SESSION["favoris"]))
+                            {
+                                affichage_by_idRecetteListe($_SESSION["favoris"]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(isset($_SESSION["favoris"]))
+                        {
+                            affichage_by_idRecetteListe($_SESSION["favoris"]);
+                        }
+                    }
                 }
                 else{
                     if (isset($_GET["ingredientName"]))

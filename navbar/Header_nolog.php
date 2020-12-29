@@ -8,6 +8,7 @@
         </div>
         
         <div class="navbar-nav ml-auto">
+            <a href="index.php?favoris=true" class="nav-item nav-link">Favoris </a>
             <a href="Login.php" class="nav-item nav-link">Se connecter</a>
         </div>
 </nav>
