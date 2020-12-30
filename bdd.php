@@ -1,22 +1,27 @@
 <?php
 
-/*
-define('DB_SERVER', 'bt2zdg2wq1msrihj3pq9-mysql.services.clever-cloud.com');
-define('DB_USERNAME', 'uyayoi3vygszk7do');
-define('DB_PASSWORD', 'd6ieT4H86o1Ei8zGFfam');
-define('DB_NAME','bt2zdg2wq1msrihj3pq9');
-*/
-
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME','cocktails');
+if(!defined('DB_SERVER_XAMPP'))
+{
+    define('DB_SERVER_XAMPP', 'localhost');
+}
+if(!defined('DB_USERNAME_XAMPP'))
+{
+    define('DB_USERNAME_XAMPP', 'root');
+}
+if(!defined('DB_PASSWORD_XAMPP'))
+{
+    define('DB_PASSWORD_XAMPP', '');
+}
+if(!defined('DB_NAME_XAMPP'))
+{
+    define('DB_NAME_XAMPP','cocktails');
+}
 
 
 
 $log=array(); 
 try{
-    $db = new PDO('mysql:host='.DB_SERVER.';dbname='.DB_NAME,DB_USERNAME,DB_PASSWORD);
+    $db = new PDO('mysql:host='.DB_SERVER_XAMPP.';dbname='.DB_NAME_XAMPP,DB_USERNAME_XAMPP,DB_PASSWORD_XAMPP);
 }catch(PDOException $e){
     print "Erreur :" . $e->getMessage()."<br/>";
     die;
@@ -24,4 +29,3 @@ try{
 
 
 ?>
-

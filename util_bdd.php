@@ -194,18 +194,18 @@ function getHierarchyKeys()
 
 function affichage_liste_filtre_by_ingredient($ingredient)
 {
-    include "bdd_xampp.php";
+    include "bdd.php";
 
 
 
-    $idRecettesQuery =  "SELECT idRecette FROM cocktails.recettes
-               INNER JOIN cocktails.ingredientpourrecette ON cocktails.recettes.id = cocktails.ingredientpourrecette.idRecette
-               INNER JOIN cocktails.ingredient ON cocktails.ingredientpourrecette.idIngredient = cocktails.ingredient.id
-               WHERE cocktails.ingredient.nomIngredient = '" . $ingredient . "'";
+    $idRecettesQuery =  "SELECT idRecette FROM recettes
+               INNER JOIN ingredientpourrecette ON recettes.id = ingredientpourrecette.idRecette
+               INNER JOIN ingredient ON ingredientpourrecette.idIngredient = ingredient.id
+               WHERE ingredient.nomIngredient = '" . $ingredient . "'";
 
-    $recetteQuery = "SELECT titre, preparation FROM cocktails.recettes WHERE id = ";
+    $recetteQuery = "SELECT titre, preparation FROM recettes WHERE id = ";
 
-    $quantiteIngredientRecette = "SELECT quantity FROM cocktails.ingredientpourrecette WHERE idRecette = ";
+    $quantiteIngredientRecette = "SELECT quantity FROM ingredientpourrecette WHERE idRecette = ";
 
     $idRecettesQueryResult = $db->query($idRecettesQuery);
 
@@ -314,17 +314,17 @@ function affichage_liste_filtre_by_ingredient($ingredient)
 
 function affichageFavoris()
 {
-    include "bdd_xampp.php";
+    include "bdd.php";
 
 
 
-    $idRecettesQuery = "SELECT cocktails.recettes.id FROM cocktails.recettes 
-                        INNER JOIN cocktails.favoris ON cocktails.recettes.id = cocktails.favoris.id_recette 
-                        WHERE cocktails.favoris.id_utilisateur = ".$_SESSION["id"];
+    $idRecettesQuery = "SELECT recettes.id FROM recettes 
+                        INNER JOIN favoris ON recettes.id = favoris.id_recette 
+                        WHERE favoris.id_utilisateur = ".$_SESSION["id"];
 
-    $recetteQuery = "SELECT titre, preparation FROM cocktails.recettes WHERE id = ";
+    $recetteQuery = "SELECT titre, preparation FROM recettes WHERE id = ";
 
-    $quantiteIngredientRecette = "SELECT quantity FROM cocktails.ingredientpourrecette WHERE idRecette = ";
+    $quantiteIngredientRecette = "SELECT quantity FROM ingredientpourrecette WHERE idRecette = ";
 
     $idRecettesQueryResult = $db->query($idRecettesQuery);
 
@@ -461,7 +461,7 @@ function stripAccents($str) {
 
 function calculePertinenceOrderedList()
 {
-    include "bdd_xampp.php";
+    include "bdd.php";
 
     if(isset($_POST['include']))
     {
@@ -548,7 +548,7 @@ function getIdIngredientsFromCategory($tableauNom)
     $NomIngredient = array();
     $NomCategory = array();
 
-    include "bdd_xampp.php";
+    include "bdd.php";
     //echo "<br>";
 
     for($i = 0; $i < sizeof($tableauNom) ;$i++)
@@ -635,7 +635,7 @@ function getIdIngredientsFromCategory($tableauNom)
 
 function getNomFromId($id)
 {
-    include "bdd_xampp.php";
+    include "bdd.php";
 
     $queryTrouverNom = "SELECT nomIngredient FROM ingredient where id = ".$id;
     if(!$queryTrouverNomResult = $db->query($queryTrouverNom))
@@ -654,7 +654,7 @@ function getNomFromId($id)
 
 function getIdFromNom($nom)
 {
-    include "bdd_xampp.php";
+    include "bdd.php";
 
     $queryTrouverNom = "SELECT id FROM ingredient where nomIngredient = ".$nom;
     if(!$queryTrouverNomResult = $db->query($queryTrouverNom))
@@ -673,11 +673,11 @@ function getIdFromNom($nom)
 
 function affichage_by_idRecetteListe($idRecetteListe)
 {
-    include "bdd_xampp.php";
+    include "bdd.php";
 
-    $recetteQuery = "SELECT titre, preparation FROM cocktails.recettes WHERE id = ";
+    $recetteQuery = "SELECT titre, preparation FROM recettes WHERE id = ";
 
-    $quantiteIngredientRecette = "SELECT quantity FROM cocktails.ingredientpourrecette WHERE idRecette = ";
+    $quantiteIngredientRecette = "SELECT quantity FROM ingredientpourrecette WHERE idRecette = ";
 
     foreach($idRecetteListe as &$idRecette)
     {
