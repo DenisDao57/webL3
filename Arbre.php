@@ -85,13 +85,13 @@ $sous_categorie_aliment=sousCategorie("Aliment");
 for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catégorie de aliment 
     $subcategorie1=sousCategorie((String) $sous_categorie_aliment[$i]);
     if ($subcategorie1!=-1) echo"<li> <span class ='caret'> </span>".$sous_categorie_aliment[$i];
-    else echo "<li onclick=\"onClickAliment('".$sous_categorie_aliment[$i]."')\" id='aliment'>".$sous_categorie_aliment[$i]."</li>";
+    else echo "<li onclick=\"onClickAliment('".$sous_categorie_aliment[$i]."')\" id='aliment'><a class='mr-0' style='font-size:100%;color:white'>".$sous_categorie_aliment[$i]."</a></li>";
     echo "<ul class='nested'>";
     if($subcategorie1!=-1){
         for ($a=0;$a<sizeof($subcategorie1)-2;$a++){
             $subcategorie2=sousCategorie((String) $subcategorie1[$a]);
 
-            if ($subcategorie2==-1)echo"<li onclick=\"onClickAliment('".$subcategorie1[$a]."')\" id='aliment'>".$subcategorie1[$a]."</li>";
+            if ($subcategorie2==-1)echo"<li onclick=\"onClickAliment('".$subcategorie1[$a]."')\" id='aliment'><a class='mr-0' style='font-size:100%;color:white'>".$subcategorie1[$a]."</a></li>";
             else echo"<li><span class = 'caret'></span>".$subcategorie1[$a];
 
             echo "<ul class='nested'>";
@@ -99,7 +99,7 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                 for ($b=0;$b<sizeof($subcategorie2)-2;$b++){
                     $subcategorie3=sousCategorie((String) $subcategorie2[$b]);
 
-                    if($subcategorie3==-1) echo"<li onclick=\"onClickAliment('".$subcategorie2[$b]."')\" id='aliment'>".$subcategorie2[$b]."</li>";
+                    if($subcategorie3==-1) echo"<li onclick=\"onClickAliment('".$subcategorie2[$b]."')\" id='aliment'><a class='mr-0' style='font-size:100%;color:white'>".$subcategorie2[$b]."</a></li>";
                     else echo"<li><span class='caret'></span>".$subcategorie2[$b];
 
                     echo "<ul class='nested'>";
@@ -107,13 +107,13 @@ for ($i=0;$i<sizeof($sous_categorie_aliment)-1;$i++){ // Pour chaque sous catég
                         for ($c=0;$c<sizeof($subcategorie3)-2;$c++){
                             $subcategorie4=sousCategorie((String) $subcategorie3[$c]);
 
-                            if ($subcategorie4==-1) echo"<li onclick=\"onClickAliment('".$subcategorie3[$c]."')\" id='aliment'>".$subcategorie3[$c]."</li>";
+                            if ($subcategorie4==-1) echo"<li onclick=\"onClickAliment('".$subcategorie3[$c]."')\" id='aliment'><a class='mr-0' style='font-size:100%;color:white'>".$subcategorie3[$c]."</a></li>";
                             else echo"<li><span class='caret'></span>".$subcategorie3[$c];
                             
                             echo "<ul class='nested'>";
                             if($subcategorie4!=-1){
                                 for ($d=0;$d<sizeof($subcategorie4)-2;$d++){
-                                    echo"<li onclick=\"onClickAliment('".$subcategorie4[$d]."')\" id='aliment'> ".$subcategorie4[$d]."</li>";
+                                    echo"<li onclick=\"onClickAliment('".$subcategorie4[$d]."')\" id='aliment'><a class='mr-0' style='font-size:100%;color:white'> ".$subcategorie4[$d]."</a></li>";
 
     
                                 }
