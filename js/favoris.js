@@ -43,7 +43,7 @@ function removeFromFavourite(idRecette, idUser, idButton, haveToHide)
     http.onreadystatechange = function()
     {
         if(http.readyState == 4 && http.status == 200) {
-            alert(http.responseText);
+            //alert(http.responseText);
         }
     }
     http.send(null);
