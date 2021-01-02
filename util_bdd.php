@@ -671,7 +671,7 @@ function getIdFromNom($nom)
     return -1;
 }
 
-function affichage_by_idRecetteListe($idRecetteListe)
+function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
 {
     include "bdd.php";
 
