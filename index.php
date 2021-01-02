@@ -156,7 +156,7 @@ include "util_bdd.php";
 
             if(isset($_POST['include'])||isset($_POST['exclude']))
             {
-                affichage_by_idRecetteListe(calculePertinenceOrderedList());
+                affichage_by_idRecetteListe(calculePertinenceOrderedList(), false);
             }
             else
             {
@@ -172,7 +172,7 @@ include "util_bdd.php";
                         {
                             if(isset($_SESSION["favoris"]))
                             {
-                                affichage_by_idRecetteListe($_SESSION["favoris"]);
+                                affichage_by_idRecetteListe($_SESSION["favoris"], true);
                             }
                         }
                     }
@@ -180,7 +180,7 @@ include "util_bdd.php";
                     {
                         if(isset($_SESSION["favoris"]))
                         {
-                            affichage_by_idRecetteListe($_SESSION["favoris"]);
+                            affichage_by_idRecetteListe($_SESSION["favoris"], true);
                         }
                     }
                 }
