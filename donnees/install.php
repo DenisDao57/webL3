@@ -1,5 +1,8 @@
 <?php
 
+  /**
+   * Installe la base de donnée (bdd, table, peupler les tables avec Donnees.inc.php)
+   */
 
     include "Donnees.inc.php";
 
@@ -16,8 +19,10 @@
     $tableFavoris = "favoris";
     $tableUtilisateur="personne";
     
+    //drop les table pour reset si elle existe déjà dans la bbd
     dropTables($servername, $username, $password, $dbname);
 
+    //Creation de la bdd et des tables
     createDataBase($servername, $username, $password, $dbname);
     createTableIngredients($servername, $username, $password, $dbname, $tableIngredient);
     createTableSousCategorie($servername, $username, $password, $dbname, $tableSousCategorie);
@@ -26,6 +31,7 @@
     createTableUtilisateur($servername,$username,$password,$dbname,$tableUtilisateur);
     createTableFavoris($servername,$username,$password,$dbname,$tableFavoris);
 
+    //peuplement des tables avec Donnees.inc.php
     peuplerIngredients($categoryRacine, $servername, $username, $password, $dbname, $tableIngredient);
 
     peuplerSousCategorie($servername, $username, $password, $dbname, $tableSousCategorie);
@@ -33,11 +39,20 @@
     peuplerRecettes($servername, $username, $password, $dbname, $tableIngredient); 
 
 
-    //function peuplerHierarchyIngredients(string $server, string $username, string $pswd, string $dataBaseName, string $currentCategory, int $currentId, int $parentId)
     $categoryRacine = "Aliment";
-    //peuplerHierarchyIngredients($servername, $username, $password, $dbname, $categoryRacine, 2, 1);
 
 
+        
+    /**
+     * Crée une base de donnée
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $dbname nom de la base de donnée qu'on veut créer
+     * @return void
+     */
     function createDataBase(string $servername, string $username, string $password, string $dbname)
     {
         // Create connection
@@ -65,6 +80,19 @@
         $conn->close();
     }
 
+    /**
+     * Crée une table qui stock des ingredients 
+     * 
+     * int idIngredient PRIMARY KEY | varchar nom ingredient
+     * 
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les ingredients
+     * @return void
+     */
     function createTableIngredients(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       //Connection à la BDD
@@ -91,6 +119,19 @@
 
     }
 
+    /**
+     * Crée une table qui stock les favoris des utilisateurs
+     * 
+     * int id_utilisateur | int id_recette
+     * 
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les favoris des utilisateurs
+     * @return void
+     */
     function createTableFavoris(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       //Connection à la BDD
@@ -121,6 +162,19 @@
 
     }
 
+    /**
+     * Crée une table qui stock les utilisateurs
+     * 
+     * int id | varchar mail | varchar mot de passe
+     * 
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les utilisateurs 
+     * @return void
+     */
     function createTableUtilisateur(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       //Connection à la BDD
@@ -148,6 +202,19 @@
 
     }
 
+    /**
+     * Crée une table stock qui les recettes
+     * 
+     * int id_utilisateur | int id_recette
+     * 
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les ingredient qu'on veut créer
+     * @return void
+     */
     function createTableRecette(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       //Connection à la BDD
@@ -175,6 +242,20 @@
 
     }
 
+    
+    /**
+     * Crée une table stock qui les ingredient requis pour les recettes
+     * 
+     * int idIngredient | int idRecette | varchar quantity
+     * 
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les ingredient requis pour les recettes
+     * @return void
+     */
     function createTableIngredientPourRecettes(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       //Connection à la BDD
@@ -205,6 +286,19 @@
     }
 
 
+    /**
+     * Crée une table stock qui les sous-categories pour une categorie/ingredient
+     * 
+     * int idProduit | int sousCategorieId
+     * 
+     * mysqli
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les sous-categories pour une categorie/ingredient
+     * @return void
+     */
     function createTableSousCategorie(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       //Connection à la BDD
@@ -233,6 +327,18 @@
 
     }
 
+        
+    /**
+     * Fonction qui peuple la table qui stock les ingredients à partir d'une racine
+     *
+     * @param  mixed $currentCategory racine
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les sous-categories pour une categorie/ingredient
+     * @param  mixed $dbname nom de la base de donnée
+     * @return void
+     */
     function peuplerIngredients(string $currentCategory,string $servername, string $username, string $password, string $dbname, $tablename)
     {
       //echo $currentCategory."<br>";
@@ -252,14 +358,16 @@
       }
 
       
-
+      //On verifie si on a déjà ajouté la categorie/ingredient qu'on balaye dans la bdd
       $query1 = "SELECT * FROM ".$tablename." WHERE nomIngredient = '".$conn->escape_string($currentCategory)."'";
 
 
-
+      
       if ($result = $conn->query($query1)) {
+        //Si la categorie/ingredient ne se trouve pas dans la categorie
         if($result->num_rows === 0)
         {
+          //On cherche le dernier ID
           $query2 = "SELECT MAX(id) AS maxID FROM ".$tablename;
           if ($result = $conn->query($query2))
           {
@@ -271,6 +379,7 @@
               
             }
 
+            //On insert la categorie/ingredient avec l'id qu'il faut dans la bdd
             $query3 = "INSERT INTO ".$tablename." (id, nomIngredient) VALUES (".$id.", '".$conn->escape_string($currentCategory)."')";
 
             //echo $query3."<br>";
@@ -291,12 +400,10 @@
 
 
 
+      //Si ce qu'on balaye est une categoire ( = a au moins 1 sous categorie)
       if($subCategories!=-1)
       {        
-        //echo "SIZEOF ============= ".sizeof($subCategories);
-
-        //echo "SIZEOF ===== ".sizeof($subCategories);
-        //print_r($subCategories);
+        //Si on ne traite pas la categorie Aliment
         if(array_key_exists('super-categorie',$subCategories))
         {
           for($i=0;$i<sizeof($subCategories)-2;$i++)
@@ -306,7 +413,9 @@
             peuplerIngredients($subCategories[$i], $servername, $username, $password, $dbname, $tablename);
           }
         }
+        //sinon
         else{
+          //On fait une recursion chaque sous categorie/ingredient de la categorie qu'on balaye
           for($i=0;$i<sizeof($subCategories)-1;$i++)
           {
             if(sousCategorie($currentCategory))
@@ -321,6 +430,18 @@
       }
     }
 
+
+        
+    /**
+     * Fonction qui peuple la table qui stock des sous categories
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les sous-categories pour une categorie/ingredient
+     * @param  mixed $dbname nom de la base de donnée
+     * @return void
+     */
     function peuplerSousCategorie(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
 
@@ -345,15 +466,19 @@
       if ($result = $conn->query($query))
       {
         print_r($result);
+        //Pour chaque ingredient/Category dans la table ingredient
         while ($row = $result->fetch_assoc()) 
         {
             $nomIngredient = $row['nomIngredient'];
+            //si l'élément a au moins une sous categorie
             if(array_key_exists('sous-categorie', $Hierarchie[$nomIngredient]))
             {
               $ingredientSousCategorie_key = array_keys($Hierarchie[$nomIngredient]['sous-categorie']);
+              //pour chaque sous categorie
               foreach ($ingredientSousCategorie_key as &$value) {
                 $sousCategorie = $Hierarchie[$nomIngredient]['sous-categorie'][$value];
                 
+                //On cherche l'id de la sous categorie
                 $rechercheIdSouCategorie = "SELECT id FROM ingredient WHERE nomIngredient = \"".$sousCategorie."\"";
                 
 
@@ -369,6 +494,7 @@
                 $idSousCategorie = $ligne['id'];
                 //$idSousCategorie = 1;
 
+                //On insert dans la table ingredientsouscategorie la ligne      id de l'element qu'on balaye | id qu'on vient de trouver
                 $insertionSousCategorie = "INSERT INTO ingredientsouscategorie (idProduit, sousCategorieId) VALUES (".$row['id'].", ".$idSousCategorie.")";
                 if (!$conn->query($insertionSousCategorie))
                 {
@@ -377,6 +503,8 @@
               }
               
             }
+            //Si l'element qu'on balaye n'a pas de sous categorie
+            //alors on insert la ligne        id de l'element qu'on balaye | NULL
             else{
               $insertionSousCategorie = "INSERT INTO ingredientsouscategorie (idProduit, sousCategorieId) VALUES (".$row['id'].", NULL)";
               if (!$conn->query($insertionSousCategorie))
@@ -392,6 +520,18 @@
       $conn->close();
     }
 
+
+        
+    /**
+     * Fonction qui peuple la table qui stock les recettes et la table ingredientPourRecette
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $tablename nom de la table qui stock les recettes
+     * @param  mixed $dbname nom de la base de donnée
+     * @return void
+     */
     function peuplerRecettes(string $servername, string $username, string $password, string $dbname, string $tablename)
     {
       $idRecette = 1;
@@ -405,11 +545,12 @@
         die("Erreur connexion au serveur" . $conn->connect_error);
       }
 
+      //On retrouve l'id Max des id Recettes
       $query1 = "SELECT MAX(id) AS maxID FROM recettes";
       
-      
+      //Pour chaque recettes dans Donnees.inc.php
       foreach($Recettes as &$value){
-        //Insert dans la table des recettes
+
         $quantity = preg_split("/\|/",$value['ingredients']);
         if ($result = $conn->query($query1))
         {
@@ -418,20 +559,24 @@
           {
             $idRecette = $row['maxID'] + 1;
           }
+          //Insertion de la ligne idRecette | titreRecette | preparationRecette dans la table recette
           $query2 = "INSERT INTO recettes (id, titre, preparation) VALUES (".$idRecette.", '".$conn->escape_string($value['titre'])."', '".$conn->escape_string($value['preparation'])."')";
           if (!$conn->query($query2))
           {
             echo " <br> Erreur: " . $query2 . "<br>" . $conn->error;
           }
           $i=0;
+          //Pour chaque ingredient dans la recette
           foreach($value['index'] as &$nomIngredient)
           {
+            //On retrouve l'id de l'ingredient
             $query3 = "SELECT id FROM ingredient WHERE nomIngredient = '".$nomIngredient."'";
             if ($result = $conn->query($query3))
             {
               $row = $result->fetch_assoc();
               $idIngredient = $row['id'];
               
+              //Insertion de la ligne idIngredient | idRecette | quantity dans la table recette
               $query4 = "INSERT INTO ingredientpourrecette (idIngredient,	idRecette,	quantity) VALUES (".$idIngredient.",".$idRecette.",'".$conn->escape_string($quantity[$i])."')";
               if (!$conn->query($query4))
               {
@@ -445,8 +590,16 @@
       $conn->close();
     }
 
-
-    //Fonction pour drop la base de donnée
+    
+    /**
+     * Fonction drop les tables crée ( = drop de la BDD)
+     *
+     * @param  mixed $servername le nom du serveur
+     * @param  mixed $username nom d'utilisateur pour se connecter au serveur
+     * @param  mixed $password mot de passe pour se connecter au serveur
+     * @param  mixed $dbname nom de la base de donnée
+     * @return void
+     */
     function dropTables(string $servername, string $username, string $password, string $dbname)
     {
       //Connection à la BDD

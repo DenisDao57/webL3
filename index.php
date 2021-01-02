@@ -53,6 +53,12 @@ include "util_bdd.php";
 
                 <div class="col-sm">
 
+                    <!-- 
+                        Script appeler et configurer le plug in multiselect
+                        https://github.com/davidstutz/bootstrap-multiselect
+
+                        configuration du multiselect pour inclure
+                    -->
                     <script type="text/javascript">
                         $(document).ready(function() {
                             $('#alimentInclude').multiselect({
@@ -62,6 +68,7 @@ include "util_bdd.php";
                                 nonSelectedText: 'Tout',
                                 maxHeight: 200,
                                 enableCaseInsensitiveFiltering: true,
+                                //On empeche la selection de la même option entre les deux multiselect
                                 onChange: function(options, selected)
                                 {
                                     var caseUpdated = $(options).val();
@@ -73,6 +80,12 @@ include "util_bdd.php";
                             });
                         });
                     </script>
+                    <!-- 
+                        Script appeler et configurer le plug in multiselect
+                        https://github.com/davidstutz/bootstrap-multiselect
+
+                        configuration du multiselect pour exclure
+                    -->
                     <script type="text/javascript">
                         $(document).ready(function() {
                             $('#alimentExclude').multiselect({
@@ -82,6 +95,7 @@ include "util_bdd.php";
                                 nonSelectedText: 'Rien',
                                 maxHeight: 200,
                                 enableCaseInsensitiveFiltering: true,
+                                //On empeche la selection de la même option entre les deux multiselect
                                 onChange: function(options, selected)
                                 {
                                     var caseUpdated = $(options).val();
@@ -148,28 +162,32 @@ include "util_bdd.php";
 
 
 
-            
+            //gestion de l'affichage des recettes
 
 
             $favoris=false;
             
-
+            //cas de la recherche avec la recherche inclusion/exclusion
             if(isset($_POST['include'])||isset($_POST['exclude']))
             {
                 affichage_by_idRecetteListe(calculePertinenceOrderedList(), false);
             }
             else
             {
+                //Cas de la consultation de favoris
                 if (isset($_GET["favoris"]))
                 {
+
                     if (isset($_SESSION['login']))
                     {
+                        //Cas de la consultation de favoris avec utilisateur connecté
                         if ($_SESSION['login'] = true)
                         {
                             affichageFavoris();
                         }
                         else
                         {
+                            //Cas de la consultation de favoris avec utilisateur non connecté
                             if(isset($_SESSION["favoris"]))
                             {
                                 affichage_by_idRecetteListe($_SESSION["favoris"], true);
@@ -178,20 +196,26 @@ include "util_bdd.php";
                     }
                     else
                     {
+                        //Cas de la consultation de favoris avec utilisateur non connecté
                         if(isset($_SESSION["favoris"]))
                         {
                             affichage_by_idRecetteListe($_SESSION["favoris"], true);
                         }
                     }
                 }
+                //cas de la recherche par ingredient
                 else{
                     if (isset($_GET["ingredientName"]))
                     {
                         affichage_liste_filtre_by_ingredient($_GET["ingredientName"]);
-                    }else{
-                        if (isset($_POST["filtrage_nom"])) {
+                    }
+                    else
+                    {
+                        //cas de la recherche par nom de recette
+                        if (isset($_POST["filtrage_nom"]))
+                        {
                             affichage_liste_filtre($_POST["filtrage_nom"],$favoris,"index");
-                        } else affichage_liste_filtre("",$favoris,"index");
+                        } else affichage_liste_filtre("",$favoris,"index");     //cas par défaut (sans recherche)
                     }
                 }
             }

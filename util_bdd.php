@@ -34,7 +34,9 @@ function quantite_recette($id_recette, $db)
 
 function affichage_liste_filtre($nom, $favoris, $index)
 {
+    //On inclue bdd.hp pour dialoguer avec la base de donnée
     include "bdd.php";
+
     if (!(isset($_SESSION["login"])) && $favoris==true){ // Cas pas login & favoris (pour le tri par favori)
         if (isset($_SESSION["favoris"])){
             $sqlquery= 'SELECT * FROM recettes WHERE titre like "%'.$nom.'%"'; ///// BASE
@@ -192,8 +194,17 @@ function getHierarchyKeys()
     return array_keys($Hierarchie);
 }
 
+
+
+/**
+ * génère l'affichage d'une liste de recette contenant un certain ingredient
+ *
+ * @param  mixed $ingredient ingredient que les recettes affichées doivent contenir
+ * @return void
+ */
 function affichage_liste_filtre_by_ingredient($ingredient)
 {
+    //On inclue bdd.hp pour dialoguer avec la base de donnée
     include "bdd.php";
 
 
@@ -209,6 +220,7 @@ function affichage_liste_filtre_by_ingredient($ingredient)
 
     $idRecettesQueryResult = $db->query($idRecettesQuery);
 
+    //Pour chaque recette contenant l'ingredient on génère un affichage
     while ($idRecette = $idRecettesQueryResult->fetch()) {
         //echo "id =".$idRecette['idRecette']."<br>";
 
@@ -218,10 +230,12 @@ function affichage_liste_filtre_by_ingredient($ingredient)
 
         $recetteResult = $db->query($recetteQuery . $idRecette['idRecette']);
 
+        //Recuperation des infos de la recette
         while ($recette = $recetteResult->fetch()) {
             echo '<div class="d-flex w-100 justify-content-between">';
 
 
+            //Pour chercher si il existe une image pour la recette 
             $normalizedCocktailName = preg_replace('/[\']/', '', stripAccents($recette['titre']));
             $normalizedCocktailName = ucfirst(strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', stripAccents($normalizedCocktailName))));
 
@@ -230,13 +244,17 @@ function affichage_liste_filtre_by_ingredient($ingredient)
             
 
             echo '<h2 class="mb-1">' . $recette['titre'] . '</h2>'; // Affichage du titre
-            if (isset($_SESSION["login"])) {
+            
+            //Affichage du bouton favoris
+            if (isset($_SESSION["login"])) {        //Cas où l'utilisateur est connecté
                 if ($_SESSION["login"])
                 {
+                    //Cas où la recette est un favoris
                     if(isFavoris($_SESSION["id"], $idRecette['idRecette'],$db))
                     {
                         echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette['idRecette'] .'","'. $_SESSION["id"].'","buton'. $idRecette['idRecette'] .'",false)>Retirer des Favoris</button>';
                     }
+                    //Cas où la recette n'est un pas favoris
                     else
                     {
                         echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. $_SESSION["id"].'","buton'. $idRecette['idRecette'] .'")>Ajouter au Favoris</button>';
@@ -245,17 +263,21 @@ function affichage_liste_filtre_by_ingredient($ingredient)
             }
             else
             {
+                //Cas où l'utilisateur n'est pas connecté et qu'il a des favoris temporraires
                 if(isset($_SESSION["favoris"]))
                 {
+                    //Cas où la recette est un favoris temporaire
                     if(isFavoristemp($idRecette['idRecette']))
                     {
                         echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'",false)>Retirer des Favoris</button>';
                     }
+                    //Cas où la recette n'est pas un favoris temporaire
                     else
                     {
                         echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'")>Ajouter au Favoris</button>';
                     }
                 }
+                //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                 else
                 {
                     echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'")>Ajouter au Favoris</button>';
@@ -264,12 +286,14 @@ function affichage_liste_filtre_by_ingredient($ingredient)
 
             echo "</div>";
 
+            //Si il existe une image pour la recette on ajoute une colonne
             if(file_exists("image/" . $normalizedCocktailName .".jpg"))
             {
                 echo "<div class='row'>";
                 echo "<div class='col'>";
             }
 
+            //Affichage des instruction de préparation
             echo "<h4>Préparation : </h4>";
             echo "<p>" . $recette['preparation'] . "</p>";
 
@@ -279,7 +303,7 @@ function affichage_liste_filtre_by_ingredient($ingredient)
         }
 
 
-
+        //Affichage des ingrédients de la recette
         echo "<h4>Ingrédients : </h4>";
 
         $QuantityResult = $db->query($quantiteIngredientRecette . $idRecette['idRecette']);
@@ -291,7 +315,7 @@ function affichage_liste_filtre_by_ingredient($ingredient)
 
 
         
-
+        //Affichage de l'image de la recette si elle existe
         if(file_exists("image/" . $normalizedCocktailName .".jpg"))
         {
             echo "</div>";
@@ -312,8 +336,15 @@ function affichage_liste_filtre_by_ingredient($ingredient)
     $db = NULL;
 }
 
+/**
+ * génère l'affichage des recettes favorites d'un utilisateur connecté
+ *
+ * @return void
+ */
 function affichageFavoris()
 {
+
+    //On inclue bdd.hp pour dialoguer avec la base de donnée
     include "bdd.php";
 
 
@@ -328,6 +359,8 @@ function affichageFavoris()
 
     $idRecettesQueryResult = $db->query($idRecettesQuery);
 
+
+    //Pour chaque recette favorite de l'utilisateur on genère son affichage
     while ($idRecette = $idRecettesQueryResult->fetch()) {
         //echo "id =".$idRecette['idRecette']."<br>";
 
@@ -337,10 +370,11 @@ function affichageFavoris()
 
         $recetteResult = $db->query($recetteQuery . $idRecette['id']);
 
+        //Recuperation des infos de la recette
         while ($recette = $recetteResult->fetch()) {
             echo '<div class="d-flex w-100 justify-content-between">';
 
-
+            //Pour chercher si il existe une image pour la recette 
             $normalizedCocktailName = preg_replace('/[\']/', '', stripAccents($recette['titre']));
             $normalizedCocktailName = ucfirst(strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', stripAccents($normalizedCocktailName))));
 
@@ -349,13 +383,17 @@ function affichageFavoris()
             
 
             echo '<h2 class="mb-1">' . $recette['titre'] . '</h2>'; // Affichage du titre
-            if (isset($_SESSION["login"])) {
+            
+            //Affichage du bouton favoris
+            if (isset($_SESSION["login"])) {        //Cas où l'utilisateur est connecté
                 if ($_SESSION["login"])
                 {
+                    //Cas où la recette est un favoris
                     if(isFavoris($_SESSION["id"], $idRecette['id'],$db))
                     {
                         echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette['id'] .'","'. $_SESSION["id"].'","buton'. $idRecette['id'] .'",true)>Retirer des Favoris</button>';
                     }
+                    //Cas où la recette n'est un pas favoris
                     else
                     {
                         echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. $_SESSION["id"].'","buton'. $idRecette['id'] .'")>Ajouter au Favoris</button>';
@@ -364,17 +402,21 @@ function affichageFavoris()
             }
             else
             {
+                //Cas où l'utilisateur n'est pas connecté et qu'il a des favoris temporraires
                 if(isset($_SESSION["favoris"]))
                 {
+                    //Cas où la recette est un favoris temporaire
                     if(isFavoristemp($idRecette['id']))
                     {
                         echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'",true)>Retirer des Favoris</button>';
                     }
+                    //Cas où la recette n'est pas un favoris temporaire
                     else
                     {
                         echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'")>Ajouter au Favoris</button>';
                     }
                 }
+                //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                 else
                 {
                     echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'")>Ajouter au Favoris</button>';
@@ -383,12 +425,14 @@ function affichageFavoris()
 
             echo "</div>";
 
+            //Si il existe une image pour la recette on ajoute une colonne
             if(file_exists("image/" . $normalizedCocktailName .".jpg"))
             {
                 echo "<div class='row'>";
                 echo "<div class='col'>";
             }
 
+            //Affichage des instruction de préparation
             echo "<h4>Préparation : </h4>";
             echo "<p>" . $recette['preparation'] . "</p>";
 
@@ -398,7 +442,7 @@ function affichageFavoris()
         }
 
 
-
+        //Affichage des ingrédients de la recette
         echo "<h4>Ingrédients : </h4>";
 
         $QuantityResult = $db->query($quantiteIngredientRecette . $idRecette['id']);
@@ -410,7 +454,7 @@ function affichageFavoris()
 
 
 
-
+        //Affichage de l'image de la recette si elle existe
         if(file_exists("image/" . $normalizedCocktailName .".jpg"))
         {
             echo "</div>";
@@ -432,6 +476,18 @@ function affichageFavoris()
     $db = NULL;
 }
 
+
+/**
+ * isFavoris
+ * 
+ * verifie si une recette fais partie des favoris d'un utilisateur connecté
+ *
+ * @param  mixed $id_utilisateur l'id de l'utilisateur dont on verifie les favoris
+ * @param  mixed $id_recette l'id de la recette qu'on cherche dans les favoris de l'utilisateur
+ * @param  mixed $db PDO qu'on utilise pour dialoguer avec la base de données
+ * @return true si la recette se trouve dans les favoris de l'utilisateur connecté
+ * @return false si la recette ne se trouve pas dans les favoris de l'utilisateur connecté
+ */
 function isFavoris($id_utilisateur, $id_recette, $db)
 {
     $array_fav = array();
@@ -445,6 +501,16 @@ function isFavoris($id_utilisateur, $id_recette, $db)
     }
 }
 
+
+/**
+ * isFavoristemp
+ * 
+ * verifie si une recette fais partie des favoris temporaires
+ *
+ * @param  mixed $id_recette l'id de la recette qu'on cherche dans les favoris temporaires
+ * @return true si la recette se trouve dans les favoris les favoris temporaires
+ * @return false si la recette ne se trouve pas dans les favoris les favoris temporaires
+ */
 function isFavoristemp($id_recette)
 {
     for ($i=0;$i<sizeof($_SESSION["favoris"]);$i++){
@@ -455,14 +521,30 @@ function isFavoristemp($id_recette)
     return false;
 }
 
+/**
+ * Fonction trouvée sur stackOverflow
+ * Sert à convertir un caractère accentué à sa version sans accent,
+ * utilisée pour la normalisation avant de chercher si il existe une image pour une recette
+ */
 function stripAccents($str) {
     return strtr(utf8_decode($str), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
 }
 
+
+/**
+ * calcule une liste d'id triée par ordre de pertinence décroissante 
+ * (on commence par ce qu'il y a de plus pertinent)
+ * la liste est calculée en fonction d'ingrédient qu'on veut avoir dans les recettes
+ * et d'ingrédeient qu'on ne veut pas avoir dans les recettes
+ * 
+ * @return void
+ */
 function calculePertinenceOrderedList()
 {
+    //On inclue bdd.hp pour dialoguer avec la base de donnée
     include "bdd.php";
 
+    //On recupère la liste des id qu'on veut inclure et exclure
     if(isset($_POST['include']))
     {
         $idIncludeListe = getIdIngredientsFromCategory($_POST['include']);
@@ -472,12 +554,19 @@ function calculePertinenceOrderedList()
         $idExcludeListe = getIdIngredientsFromCategory($_POST['exclude']);
     }
 
+    //en fonction des listes include et exclude on construit une requete sql adaptée
+    //on cherche les recettes qui incluent le + les ingrédients qu'on veut, une succession de OR 
+    //on exclue les recettes qu'on veut exclure avec, une succession de AND 
 
+    //A ce stade on a plusieurs fois la même recette, pour obtenir une liste de pertinence, 
+    //on compte le nombre de fois où on voit une recette apparaitre
+    //et on trie les recettes qui apparaisse par nombre d'apparation décroissante
 
     $queryPourClassementdeRecette = "SELECT recettes.id,COUNT(*) AS nbAppariton 
                     FROM recettes JOIN ingredientpourrecette ON recettes.id = ingredientpourrecette.idRecette  
                     WHERE";
 
+    //Cas si on veut inclure des ingédients
     if(isset($_POST['include']))
     {
         for($i = 0; $i < sizeof($idIncludeListe) ; $i++)
@@ -491,6 +580,7 @@ function calculePertinenceOrderedList()
                 $queryPourClassementdeRecette.=" OR ingredientpourrecette.idIngredient = ".$idIncludeListe[$i];
             }  
         }
+        //Cas où veut inclure ET exclure certains ingrédient
         if(isset($_POST['exclude']))
         {
             for($i = 0; $i < sizeof($idExcludeListe) ; $i++)
@@ -501,6 +591,7 @@ function calculePertinenceOrderedList()
     }
     else
     {
+        //Cas si on veut exclure des ingredients UNIQUEMENT
         if(isset($_POST['exclude']))
         {
             for($i = 0; $i < sizeof($idExcludeListe) ; $i++)
@@ -519,14 +610,13 @@ function calculePertinenceOrderedList()
 
 
     
-
-
+    
+    //On ordonne la table
     $queryPourClassementdeRecette .= " GROUP BY recettes.id ORDER BY nbAppariton DESC";
-
-    //echo $queryPourClassementdeRecette;
 
     $listeIdRecetteOrderedByPertinence = array();
 
+    //On construit un tableau représentant le resultat de la requete
     if(!$queryPourClassementdeRecetteResult = $db->query($queryPourClassementdeRecette))
     {
         echo "ERREUR trouver ID ingredient".$queryPourClassementdeRecette;
@@ -538,11 +628,30 @@ function calculePertinenceOrderedList()
             array_push($listeIdRecetteOrderedByPertinence, $arrayResult['id']);
         }
     }
+
+    //On ferme la connexion
+    $db = NULL;
+
+    //On retourne le tableau
     return $listeIdRecetteOrderedByPertinence;
 
-    $db = NULL;
+    
 }
 
+
+/**
+ * getIdIngredientsFromCategory
+ *
+ * retourne un tableau d'ID d'ingredient à partir d'un tableau de nom de categorie et/ou de nom d'ingrédient
+ * ce tableau est remplis des id d'ingredients auquel on peut arriver 
+ * en ayant comme point de départ un nom de categorie/d'ingredient
+ * 
+ * on cherche à obtenir chaque id des feuilles de l'abre dont la racine de l'abre est le noeud.nom = nom de categorie et/ou de nom d'ingrédient
+ * 
+ * 
+ * @param  mixed $tableauNom tableau de nom de categorie ou d'ingrédient
+ * @return tab un tableau d'id d'ingredient
+ */
 function getIdIngredientsFromCategory($tableauNom)
 {
     $NomIngredient = array();
@@ -551,9 +660,10 @@ function getIdIngredientsFromCategory($tableauNom)
     include "bdd.php";
     //echo "<br>";
 
+    //Pour chaque nom d'ingredient/categorie dans tableauNom
     for($i = 0; $i < sizeof($tableauNom) ;$i++)
     {
-        //echo $tableauNom[$i];
+        //Trouver ID à partir du nom
         $queryTrouverId = "SELECT id FROM ingredient where nomIngredient = \"".$tableauNom[$i]."\"";
         
         if(!$trouverIdQueryResult = $db->query($queryTrouverId))
@@ -562,8 +672,8 @@ function getIdIngredientsFromCategory($tableauNom)
         }
         else
         {
+            //trouver les sous categorie à partir de l'id
             $arrayResultIdQuery = $trouverIdQueryResult->fetch();
-            //echo "TESTEST ".$arrayResultIdQuery['id']. "|||<br>";
             $trouverIdSousCategorieQuery = "SELECT sousCategorieId FROM ingredientsouscategorie WHERE idProduit =".$arrayResultIdQuery['id'];
 
             if(!$trouverIdSousCategorieQueryResult = $db->query($trouverIdSousCategorieQuery))
@@ -574,6 +684,7 @@ function getIdIngredientsFromCategory($tableauNom)
             {
                 if($trouverIdSousCategorieQueryResult->rowCount()===1)
                 {
+                    //Si il n'y a pas de sous categorie, on retourne un tableau de taille 1 contenant l'ID qu'on balaye
                     $arrayTrouverIdSousCategorieQueryResult = $trouverIdSousCategorieQueryResult->fetch();
                     if($arrayTrouverIdSousCategorieQueryResult['sousCategorieId'] === NULL)
                     {
@@ -581,6 +692,7 @@ function getIdIngredientsFromCategory($tableauNom)
                         //echo "ici <br>";
                         //return $NomCategory;
                     }
+                    //Si il y a une seule sous categorie, on fait une recursion et on retourne getIdIngredientsFromCategory[nom de la sous categorie]
                     else
                     {
 
@@ -590,31 +702,32 @@ function getIdIngredientsFromCategory($tableauNom)
                         return getIdIngredientsFromCategory(array($nomSousCategorie));
                     }
                 }
+                //Si il y a plusieurs sous categorie
                 else
                 {
 
-                    //echo "AT THE BEGINNING :<br>";
-                    //print_r($NomCategory);
-                    //echo "<br>";
-
+                    //pour chaque sous categorie
                     while($arrayResultSousCategoriIdQuery = $trouverIdSousCategorieQueryResult->fetch())
                     {
+
                         $queryTrouverNom = "SELECT nomIngredient FROM ingredient where id = ".$arrayResultSousCategoriIdQuery['sousCategorieId'];
                         if(!$queryTrouverNomResult = $db->query($queryTrouverNom))
                         {
                             echo "ERREUR trouver NOM sous categorie ingredient -> ".$queryTrouverNom;
                         }
+                        //Pour chaque sous categorie on fait une recursion avec getIdIngredientsFromCategory([nom Ingredient de la sous categorie])
+                        //ce resultat est ajouté au tableau qui contient le resultat de la recursion actuel
                         else
                         {
                             $arrayQueryTrouverNomResult = $queryTrouverNomResult->fetch();
 
-                            //echo $arrayQueryTrouverNomResult['nomIngredient'];
-                            
+
                             $test = getIdIngredientsFromCategory(array($arrayQueryTrouverNomResult['nomIngredient']));
                             //echo "<br> RECURSION RESULT --->";
                             //print_r($test);
                             //echo "<br>";
 
+                            //Ajout au tableau du resultat de la recursion actuel
                             foreach($test as &$ingredient)
                             {
                                 array_push($NomCategory, $ingredient);
@@ -629,10 +742,22 @@ function getIdIngredientsFromCategory($tableauNom)
         }
     }
     
+    //fermeture de la connexion à la base de donnée
     $db=NULL;
+
+    //On retourne le tableau du resultat de la recursion actuel
     return $NomCategory;
 }
 
+
+/**
+ * getNomFromId
+ * 
+ * retourne le nom d'un ingredient à partir de son id
+ * sinon retourne -1
+ *
+ * @param  mixed $id id de l'ingredient dont on cherche le nom
+ */
 function getNomFromId($id)
 {
     include "bdd.php";
@@ -652,6 +777,14 @@ function getNomFromId($id)
     return -1;
 }
 
+/**
+ * getIdFromNom
+ * 
+ * retourne l'id d'un ingredient à partir de son nom
+ * sinon retourne -1
+ *
+ * @param  mixed $nom nom de l'ingredient dont on cherche l'id'
+ */
 function getIdFromNom($nom)
 {
     include "bdd.php";
@@ -671,28 +804,39 @@ function getIdFromNom($nom)
     return -1;
 }
 
+
+/**
+ * génère l'affichage des recettes pour une liste d'id Recette
+ *
+ *
+ * @param  mixed $idRecetteListe la liste des id des recettes à afficher
+ * @param  mixed $affichagePourFavoris boolean  true si on la fonction est utilisée pour afficher des favoris (l'onglet favoris)
+ *                                              false sinon
+ * @return void
+ */
 function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
 {
+    //On inclue bdd.hp pour dialoguer avec la base de donnée
     include "bdd.php";
 
     $recetteQuery = "SELECT titre, preparation FROM recettes WHERE id = ";
 
     $quantiteIngredientRecette = "SELECT quantity FROM ingredientpourrecette WHERE idRecette = ";
 
+    //Pour chaque recette contenant l'ingredient on génère un affichage
     foreach($idRecetteListe as &$idRecette)
     {
-        //echo "id =".$idRecette['idRecette']."<br>";
-
-        
 
         echo '<a name='.$idRecette.' id="row'. $idRecette .'" href="#" class="list-group-item list-group-item-action flex-column align-items-start ">';
 
         $recetteResult = $db->query($recetteQuery.$idRecette);
 
+
+        //Recuperation des infos de la recette
         while ($recette = $recetteResult->fetch()) {
             echo '<div class="d-flex w-100 justify-content-between">';
 
-
+            //Pour chercher si il existe une image pour la recette 
             $normalizedCocktailName = preg_replace('/[\']/', '', stripAccents($recette['titre']));
             $normalizedCocktailName = ucfirst(strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', stripAccents($normalizedCocktailName))));
 
@@ -702,15 +846,20 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
 
             echo '<h2 class="mb-1">' . $recette['titre'] . '</h2>'; // Affichage du titre
             
-            if($affichagePourFavoris)//Si la fonction est utilisée pour l'affichage des favoris temporaires (obligé de différencié pour masquer la recette lors de la suprression) 
+            //Si la fonction est utilisée pour l'affichage des favoris temporaires (obligé de différencié pour masquer la recette lors de la suprression (fonction javascript)) 
+            if($affichagePourFavoris)
             {
+                //Affichage du bouton favoris
                 if (isset($_SESSION["login"])) {
+                    //Cas où l'utilisateur est connecté
                     if ($_SESSION["login"])
                     {
+                        //Cas où la recette est un favoris
                         if(isFavoris($_SESSION["id"], $idRecette,$db))
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'",true)>Retirer des Favoris</button>';
                         }
+                        //Cas où la recette n'est un pas favoris
                         else
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
@@ -719,32 +868,40 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
                 }
                 else
                 {
+                    //Cas où l'utilisateur n'est pas connecté et qu'il a des favoris temporraires
                     if(isset($_SESSION["favoris"]))
                     {
+                        //Cas où la recette est un favoris temporaire
                         if(isFavoristemp($idRecette))
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'",true)>Retirer des Favoris</button>';
                         }
+                        //Cas où la recette n'est pas un favoris temporaire
                         else
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
                         }
                     }
+                    //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                     else
                     {
                         echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
                     }
                 }
             }
+            //Si la fonction n'est pas utilisée pour l'affichage des favoris temporaires (obligé de différencié pour masquer la recette lors de la suprression, fonction javascript) 
             else
-            {    
-            if (isset($_SESSION["login"])) {
+            {  
+                //Cas où l'utilisateur est connecté  
+                if (isset($_SESSION["login"])) {
                     if ($_SESSION["login"])
                     {
+                        //Cas où la recette est un favoris
                         if(isFavoris($_SESSION["id"], $idRecette,$db))
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'",false)>Retirer des Favoris</button>';
                         }
+                        //Cas où la recette n'est un pas favoris
                         else
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
@@ -753,17 +910,21 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
                 }
                 else
                 {
+                    //Cas où l'utilisateur n'est pas connecté et qu'il a des favoris temporraires
                     if(isset($_SESSION["favoris"]))
                     {
+                        //Cas où la recette est un favoris temporaire
                         if(isFavoristemp($idRecette))
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-danger" onclick=removeFromFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'",false)>Retirer des Favoris</button>';
                         }
+                        //Cas où la recette n'est pas un favoris temporaire
                         else
                         {
                             echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
                         }
                     }
+                    //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                     else
                     {
                         echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
@@ -773,12 +934,14 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
 
             echo "</div>";
 
+            //Si il existe une image pour la recette on ajoute une colonne
             if(file_exists("image/" . $normalizedCocktailName .".jpg"))
             {
                 echo "<div class='row'>";
                 echo "<div class='col'>";
             }
 
+            //Affichage des instruction de préparation
             echo "<h4>Préparation : </h4>";
             echo "<p>" . $recette['preparation'] . "</p>";
 
@@ -789,6 +952,7 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
 
 
 
+        //Affichage des ingrédients de la recette
         echo "<h4>Ingrédients : </h4>";
 
         $QuantityResult = $db->query($quantiteIngredientRecette . $idRecette);
@@ -801,6 +965,7 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
 
         
 
+        //Affichage de l'image de la recette si elle existe
         if(file_exists("image/" . $normalizedCocktailName .".jpg"))
         {
             echo "</div>";
