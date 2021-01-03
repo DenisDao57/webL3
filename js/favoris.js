@@ -48,7 +48,7 @@ function removeFromFavourite(idRecette, idUser, idButton, haveToHide)
     //changement de la couleur du bouton du rouge vers le vert
     document.getElementById(idButton).className = "btn btn-success";
     //changement du texte
-    document.getElementById(idButton).innerHTML = "Ajouter au Favoris";
+    document.getElementById(idButton).innerHTML = "Ajouter aux Favoris";
 
     //changement de la fonction onclick de removeFromFavourite vers addToFavourite
     document.getElementById(idButton).setAttribute("onclick","addToFavourite('"+idRecette+"','"+idUser+"','"+idButton+"')");

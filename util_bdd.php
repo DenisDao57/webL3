@@ -70,7 +70,7 @@ function affichage_liste_filtre($nom, $favoris, $index)
                 }
                 else
                 {
-                    echo '<button id="buton'. $row["id"] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $row["id"] .'","'. $_SESSION["id"].'","buton'. $row["id"] .'")>Ajouter au Favoris</button>';
+                    echo '<button id="buton'. $row["id"] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $row["id"] .'","'. $_SESSION["id"].'","buton'. $row["id"] .'")>Ajouter aux Favoris</button>';
                 }   
             }
         }
@@ -84,12 +84,12 @@ function affichage_liste_filtre($nom, $favoris, $index)
                 }
                 else
                 {
-                    echo '<button id="buton'. $row["id"] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $row["id"] .'","'. -1 .'","buton'. $row["id"] .'")>Ajouter au Favoris</button>';
+                    echo '<button id="buton'. $row["id"] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $row["id"] .'","'. -1 .'","buton'. $row["id"] .'")>Ajouter aux Favoris</button>';
                 }
             }
             else
             {
-                echo '<button id="buton'. $row["id"] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $row["id"] .'","'. -1 .'","buton'. $row["id"] .'")>Ajouter au Favoris</button>';
+                echo '<button id="buton'. $row["id"] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $row["id"] .'","'. -1 .'","buton'. $row["id"] .'")>Ajouter aux Favoris</button>';
             }
         }
 
@@ -257,7 +257,7 @@ function affichage_liste_filtre_by_ingredient($ingredient)
                     //Cas où la recette n'est un pas favoris
                     else
                     {
-                        echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. $_SESSION["id"].'","buton'. $idRecette['idRecette'] .'")>Ajouter au Favoris</button>';
+                        echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. $_SESSION["id"].'","buton'. $idRecette['idRecette'] .'")>Ajouter aux Favoris</button>';
                     }   
                 }
             }
@@ -274,13 +274,13 @@ function affichage_liste_filtre_by_ingredient($ingredient)
                     //Cas où la recette n'est pas un favoris temporaire
                     else
                     {
-                        echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'")>Ajouter au Favoris</button>';
+                        echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'")>Ajouter aux Favoris</button>';
                     }
                 }
                 //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                 else
                 {
-                    echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'")>Ajouter au Favoris</button>';
+                    echo '<button id="buton'. $idRecette['idRecette'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['idRecette'] .'","'. -1 .'","buton'. $idRecette['idRecette'] .'")>Ajouter aux Favoris</button>';
                 }
             }
 
@@ -396,7 +396,7 @@ function affichageFavoris()
                     //Cas où la recette n'est un pas favoris
                     else
                     {
-                        echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. $_SESSION["id"].'","buton'. $idRecette['id'] .'")>Ajouter au Favoris</button>';
+                        echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. $_SESSION["id"].'","buton'. $idRecette['id'] .'")>Ajouter aux Favoris</button>';
                     }   
                 }
             }
@@ -413,13 +413,13 @@ function affichageFavoris()
                     //Cas où la recette n'est pas un favoris temporaire
                     else
                     {
-                        echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'")>Ajouter au Favoris</button>';
+                        echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'")>Ajouter aux Favoris</button>';
                     }
                 }
                 //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                 else
                 {
-                    echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'")>Ajouter au Favoris</button>';
+                    echo '<button id="buton'. $idRecette['id'] .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette['id'] .'","'. -1 .'","buton'. $idRecette['id'] .'")>Ajouter aux Favoris</button>';
                 }
             }
 
@@ -862,7 +862,7 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
                         //Cas où la recette n'est un pas favoris
                         else
                         {
-                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
+                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'")>Ajouter aux Favoris</button>';
                         }   
                     }
                 }
@@ -879,13 +879,13 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
                         //Cas où la recette n'est pas un favoris temporaire
                         else
                         {
-                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
+                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter aux Favoris</button>';
                         }
                     }
                     //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                     else
                     {
-                        echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
+                        echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter aux Favoris</button>';
                     }
                 }
             }
@@ -904,7 +904,7 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
                         //Cas où la recette n'est un pas favoris
                         else
                         {
-                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
+                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. $_SESSION["id"].'","buton'. $idRecette .'")>Ajouter aux Favoris</button>';
                         }   
                     }
                 }
@@ -921,13 +921,13 @@ function affichage_by_idRecetteListe($idRecetteListe, $affichagePourFavoris)
                         //Cas où la recette n'est pas un favoris temporaire
                         else
                         {
-                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
+                            echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter aux Favoris</button>';
                         }
                     }
                     //Cas où l'utilisateur n'est pas connecté et qu'il n'a pas des favoris temporraires
                     else
                     {
-                        echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter au Favoris</button>';
+                        echo '<button id="buton'. $idRecette .'" type="button" class="btn btn-success" onclick=addToFavourite("'. $idRecette .'","'. -1 .'","buton'. $idRecette .'")>Ajouter aux Favoris</button>';
                     }
                 }
             }
